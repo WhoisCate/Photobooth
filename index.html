@@ -5,7 +5,323 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Booth</title>
     <style>
-        /* ... giữ nguyên style của bạn ... */
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #181e25;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+        }
+        .sidebar-actions {
+            position: absolute;
+            top: 32px;
+            left: 32px;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+        }
+        .sidebar-action-btn {
+            background: #111b2a;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            cursor: pointer;
+            font-size: 22px;
+            box-shadow: 0 2px 10px #0003;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-action-btn:hover {
+            background: #448aff;
+            color: #fff;
+        }
+        .sidebar-action-btn svg {
+            width: 26px;
+            height: 26px;
+            display: block;
+        }
+        .side-bar {
+            width: 220px;
+            background: linear-gradient(180deg, #232b38 0%, #14213d 80%, #18203d 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 38px 14px 16px 14px;
+            gap: 16px;
+            min-width: 150px;
+            max-width: 240px;
+            position: relative;
+        }
+        .side-bar label {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 13px;
+        }
+        .slider-group {
+            margin-bottom: 14px;
+        }
+        .slider-label {
+            font-size: 14px;
+            margin-bottom: 2px;
+            display: block;
+        }
+        .slider {
+            width: 100%;
+            accent-color: #2697ff;
+            height: 3.5px;
+        }
+        .main-view {
+            flex: 1;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-width: 260px;
+        }
+        .video-wrap {
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 0 0 5px #242834;
+            width: 420px;
+            height: 315px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #video, #capture-canvas {
+            width: 400px;
+            height: 300px;
+            background: #000;
+            object-fit: cover;
+            border-radius: 14px;
+            display: block;
+            transition: transform 0.2s;
+        }
+        .zoom-panel {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 12px;
+            background: rgba(35, 43, 56, 0.8);
+            border-radius: 18px;
+            padding: 5px 13px;
+            position: relative;
+        }
+        .zoom-panel .icon-btn {
+            background: #222834;
+            border: none;
+            color: white;
+            font-size: 19px;
+            padding: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .zoom-panel .icon-btn:hover {
+            background: #2697ff;
+            color: #fff;
+        }
+        .zoom-panel .icon-btn svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+        .zoom-btn {
+            background: none;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 4px 13px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.2s, border 0.2s;
+        }
+        .zoom-btn.active, .zoom-btn:hover {
+            background: #2697ff;
+            color: #fff;
+        }
+        .controls-panel {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .controls-panel .icon-btn {
+            background: #222834;
+            border: none;
+            color: white;
+            font-size: 19px;
+            padding: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .controls-panel .icon-btn:hover {
+            background: #2697ff;
+            color: #fff;
+        }
+        .icon-btn svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+        .right-bar {
+            width: 160px;
+            min-width: 110px;
+            max-width: 180px;
+            background: linear-gradient(180deg, #21242b 0%, #232b38 60%, #2445a1 100%);
+            color: #fff;
+            padding: 38px 7px 18px 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .right-bar label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .captured-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+            width: 100%;
+        }
+        .captured-img-thumb-wrapper {
+            background: #21242b;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 0;
+            gap: 4px;
+            min-height: 62px;
+            box-shadow: 0 1px 6px #0002;
+        }
+        .captured-img-label {
+            color: #fff;
+            font-size: 12px;
+            margin-bottom: 1px;
+            font-weight: bold;
+        }
+        .captured-img-thumb {
+            width: 80%;
+            max-width: 70px;
+            aspect-ratio: 4/3;
+            background: #333;
+            border-radius: 5px;
+            border: 1px solid #1b81e3;
+            object-fit: contain;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .captured-img-thumb.selected {
+            box-shadow: 0 0 0 2px #2697ff;
+        }
+        .burst-countdown {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 90px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 20px #000, 0px 0px 30px #2697ff;
+            z-index: 20;
+            pointer-events: none;
+            user-select: none;
+        }
+        .bottom-bar {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            height: 70px;
+            background: linear-gradient(90deg, #ff9a61 0%, #ffb1d0 30%, #94caff 75%, #7fc0ff 100%);
+            background-size: 200% 200%;
+            animation: gradmove 8s ease-in-out infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            box-shadow: 0 -2px 12px 0 #3e5d8a50;
+            gap: 12px;
+        }
+        @keyframes gradmove {
+            0% {background-position: 0% 90%;}
+            100% {background-position: 100% 10%;}
+        }
+        .bottom-bar .bar-btn {
+            min-width: 120px;
+            font-size: 15px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.17);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 20px;
+            padding: 10px 22px;
+            margin: 0 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px #0002;
+            transition: background 0.2s;
+        }
+        .bottom-bar .bar-btn:hover {
+            background: rgba(255,255,255,0.34);
+        }
+        .bottom-bar .bar-btn .bar-btn-icon {
+            font-size: 16px;
+            margin-right: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .bottom-bar .heart-btn {
+            background: rgba(0,0,0,0.08);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            color: #fff;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        .bottom-bar .heart-btn:hover {
+            background: #fff;
+            color: #f660a2;
+            border-color: #f660a2;
+        }
+        /* Action bar for after 4 photos */
         .hidden { display: none !important; }
         .action-btn {
             min-width: 120px;
@@ -35,6 +351,53 @@
         .action-btn.green {
             background: #3dc47e;
             color: #fff;
+        }
+        @media (max-width: 900px) {
+            .main-view #video, .main-view #capture-canvas {
+                width: 62vw;
+                height: 24vw;
+                max-width: 70vw;
+                max-height: 42vw;
+            }
+            .video-wrap {
+                width: 65vw;
+                height: 25vw;
+            }
+            .side-bar, .right-bar {
+                min-width: 48px;
+                padding: 13px 2px;
+            }
+            .sidebar-actions {
+                left: 4vw;
+                top: 12px;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                flex-direction: column;
+            }
+            .side-bar, .right-bar {
+                width: 100vw;
+                min-width: unset;
+                max-width: unset;
+                flex-direction: row;
+                padding: 7px 2vw;
+                align-items: center;
+                justify-content: flex-start;
+            }
+            .main-view {
+                min-width: unset;
+            }
+            .sidebar-actions {
+                left: 4px;
+                top: 4px;
+            }
+            .bottom-bar {
+                flex-direction: column;
+                height: auto;
+                padding: 10px 0;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -299,7 +662,7 @@
                 }
                 capturedList.appendChild(wrapper);
             }
-            // Sau khi đủ 4 ảnh thì đổi action bar
+            // Khi đủ 4 ảnh, show các nút hành động tiếp theo
             toggleMainActions(capturedImages.filter(x=>x).length >= 4);
         }
 
@@ -427,7 +790,8 @@
             renderCapturedList();
             showVideo();
         };
-        // Nút "Tiếp tục" (ví dụ: hiện alert, bạn có thể thay đổi logic)
+
+        // Nút "Tiếp tục"
         document.getElementById('continue-btn').onclick = () => {
             alert('Tiếp tục!');
         };
