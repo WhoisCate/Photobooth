@@ -46,12 +46,12 @@
         .filter-controls {
             margin: 10px 0 18px 0;
             display: flex;
-            flex-direction: column;        /* Dọc */
+            flex-direction: column;
             align-items: flex-start;
             justify-content: center;
             gap: 7px;
             position: absolute;
-            left: 10px;
+            left: -100px; /* Đẩy filter sang trái hơn nữa */
             top: 10px;
             z-index: 2;
             background: rgba(255, 255, 255, 0.85);
@@ -137,6 +137,9 @@
             .controls {
                 padding: 0 10vw;
             }
+            .filter-controls {
+                left: -60px;
+            }
         }
         @media (max-width: 600px) {
             .layout {
@@ -175,6 +178,7 @@
                 box-shadow: none;
                 padding: 8px 0 0 0;
                 margin: 0 0 13px 0;
+                left: unset !important;
             }
             .filter-label {
                 font-size: 14px;
@@ -209,7 +213,7 @@
         <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
         <div class="layout">
             <div class="video-container">
-                <!-- Filter Controls (now inside video-container for vertical look) -->
+                <!-- Filter Controls -->
                 <div class="filter-controls" id="filter-controls">
                     <span class="filter-label">Filter:</span>
                     <button class="filter-btn active" data-filter="none">None</button>
