@@ -42,7 +42,6 @@
             height: 100%;
             object-fit: contain;
             transform: scaleX(-1);
-            /* Filter will be set dynamically */
         }
         .filter-controls {
             margin: 16px 0 24px 0;
@@ -51,10 +50,20 @@
             justify-content: center;
             gap: 18px;
         }
-        .filter-controls label {
-            font-weight: bold;
-            color: #ffb3c2;
-            margin-right: 4px;
+        .filter-btn {
+            background-color: #ffcedaff;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            margin: 0 2px;
+            transition: background 0.2s;
+        }
+        .filter-btn.active,
+        .filter-btn:hover {
+            background-color: #e89595;
         }
         .image-strip {
             display: flex;
@@ -120,6 +129,10 @@
                 width: 40vw;
                 height: 27vw;
             }
+            .filter-controls {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
         }
         #ios-download-banner {
             display: none;
@@ -149,19 +162,17 @@
         </div>
         <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
         <!-- Filter Controls -->
-        <div class="filter-controls">
-            <label for="filter">Filter:</label>
-            <select id="filter">
-                <option value="none">None</option>
-                <option value="grayscale(1)">Grayscale</option>
-                <option value="sepia(1)">Sepia</option>
-                <option value="invert(1)">Invert</option>
-                <option value="contrast(2)">High Contrast</option>
-                <option value="brightness(1.5)">Bright</option>
-                <option value="blur(2px)">Blur</option>
-                <option value="hue-rotate(90deg)">Hue Rotate</option>
-                <option value="saturate(3)">Saturate</option>
-            </select>
+        <div class="filter-controls" id="filter-controls">
+            <span style="font-weight:bold;color:#ffb3c2;">Filter:</span>
+            <button class="filter-btn active" data-filter="none">None</button>
+            <button class="filter-btn" data-filter="grayscale(1)">Grayscale</button>
+            <button class="filter-btn" data-filter="sepia(1)">Sepia</button>
+            <button class="filter-btn" data-filter="invert(1)">Invert</button>
+            <button class="filter-btn" data-filter="contrast(2)">High Contrast</button>
+            <button class="filter-btn" data-filter="brightness(1.5)">Bright</button>
+            <button class="filter-btn" data-filter="blur(2px)">Blur</button>
+            <button class="filter-btn" data-filter="hue-rotate(90deg)">Hue Rotate</button>
+            <button class="filter-btn" data-filter="saturate(3)">Saturate</button>
         </div>
         <div class="layout">
             <div class="video-container">
@@ -193,17 +204,24 @@
         const imageStrip = document.getElementById('image-strip').getElementsByTagName('img');
         const iosBanner = document.getElementById('ios-download-banner');
         const iosDownloadLink = document.getElementById('ios-download-link');
-        const filterSelect = document.getElementById('filter');
+        const filterControls = document.getElementById('filter-controls');
+        const filterButtons = filterControls.getElementsByClassName('filter-btn');
 
         // Default filter value
         let currentFilter = "none";
 
-        // Update filter on video when changed
-        filterSelect.addEventListener("change", function() {
-            currentFilter = this.value;
-            video.style.filter = currentFilter;
-        });
-
+        // Handle filter button click
+        for (const btn of filterButtons) {
+            btn.addEventListener('click', function() {
+                // Remove active class from all
+                for (const b of filterButtons) b.classList.remove('active');
+                // Add active class to this
+                btn.classList.add('active');
+                // Set filter
+                currentFilter = btn.getAttribute('data-filter');
+                video.style.filter = currentFilter;
+            });
+        }
         // Set initial filter
         video.style.filter = currentFilter;
 
