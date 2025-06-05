@@ -211,6 +211,75 @@
         .captured-img-thumb.selected {
             box-shadow: 0 0 0 3px #2697ff;
         }
+
+        /* NEW: Bottom gradient bar and buttons */
+        .bottom-bar {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            height: 92px;
+            background: linear-gradient(90deg, #ff9a61 0%, #ffb1d0 30%, #94caff 75%, #7fc0ff 100%);
+            background-size: 200% 200%;
+            animation: gradmove 8s ease-in-out infinite alternate;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            box-shadow: 0 -2px 12px 0 #3e5d8a50;
+            gap: 24px;
+        }
+        @keyframes gradmove {
+            0% {background-position: 0% 90%;}
+            100% {background-position: 100% 10%;}
+        }
+        .bottom-bar .bar-btn {
+            min-width: 160px;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background: rgba(255,255,255,0.17);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 24px;
+            padding: 14px 32px;
+            margin: 0 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px #0002;
+            transition: background 0.2s;
+        }
+        .bottom-bar .bar-btn:hover {
+            background: rgba(255,255,255,0.34);
+        }
+        .bottom-bar .bar-btn .bar-btn-icon {
+            font-size: 22px;
+            margin-right: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .bottom-bar .heart-btn {
+            background: rgba(0,0,0,0.08);
+            border: 2.5px solid #fff;
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            min-width: 54px;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        .bottom-bar .heart-btn:hover {
+            background: #fff;
+            color: #f660a2;
+            border-color: #f660a2;
+        }
         @media (max-width: 900px) {
             .main-view #video, .main-view #capture-canvas {
                 width: 90vw;
@@ -246,6 +315,12 @@
             .sidebar-actions {
                 left: 4px;
                 top: 4px;
+            }
+            .bottom-bar {
+                flex-direction: column;
+                height: auto;
+                padding: 10px 0;
+                gap: 10px;
             }
         }
     </style>
@@ -325,6 +400,31 @@
     <div class="right-bar">
         <label>Ảnh đã chụp</label>
         <div class="captured-list" id="captured-list"></div>
+    </div>
+    <!-- Bottom gradient bar & buttons -->
+    <div class="bottom-bar">
+        <button class="bar-btn" id="btn-mode-1">
+            <span class="bar-btn-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </span>
+            Chụp từng kiểu 1/4
+        </button>
+        <button class="bar-btn" id="btn-mode-2">
+            <span class="bar-btn-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <rect x="4" y="8" width="16" height="8" rx="4" stroke="currentColor" stroke-width="2"/>
+                    <rect x="8" y="4" width="8" height="16" rx="4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </span>
+            Chụp liên tiếp
+        </button>
+        <button class="heart-btn" title="Yêu thích">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 21s-6.486-4.689-9-7.931C-1.314 9.09 2.266 4 7.012 4c1.957 0 3.872 1.167 4.988 3.003C13.116 5.167 15.031 4 16.988 4c4.746 0 8.326 5.09 4.012 9.069C18.486 16.311 12 21 12 21z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </button>
     </div>
     <script>
         // Back button
@@ -538,6 +638,11 @@
         // Default state
         setZoom(1);
         renderCapturedList();
+
+        // Bottom bar buttons (dummy for UI match)
+        document.getElementById('btn-mode-1').onclick = () => alert('Chức năng chụp từng kiểu 1/4!');
+        document.getElementById('btn-mode-2').onclick = () => alert('Chức năng chụp liên tiếp!');
+        document.querySelector('.heart-btn').onclick = () => alert('Đã yêu thích!');
     </script>
 </body>
 </html>
