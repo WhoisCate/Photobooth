@@ -28,8 +28,8 @@
             gap: 80px;
         }
         .video-container {
-            width: 500px;
-            height: 400px;
+            width: 350px; /* giảm kích thước khung video để có cảm giác xa hơn */
+            height: 260px;
             border: 2px solid #ffcedaff;
             display: flex;
             align-items: center;
@@ -40,7 +40,7 @@
         #video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* tránh bị cắt hình */
             transform: scaleX(-1);
         }
         .image-strip {
@@ -86,7 +86,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-        /* iOS specific fixes for full screen and layout */
         @media (max-width: 600px) {
             .layout {
                 flex-direction: column;
@@ -140,19 +139,25 @@
         const countdown = document.getElementById('countdown');
         const imageStrip = document.getElementById('image-strip').getElementsByTagName('img');
 
-        // iOS: Use facingMode workaround, force inline video
+        // Tăng góc rộng (nếu thiết bị hỗ trợ)
         async function startCamera() {
             try {
-                let constraints = { video: { facingMode: "user" } };
-                // iOS: Must use 'playsinline' and request camera after user interaction
+                let constraints = {
+                    video: {
+                        facingMode: "user",
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                        // Nếu thiết bị có zoom, có thể thêm: advanced: [{zoom: 1}]
+                    }
+                };
                 if (isIOS()) {
-                    // iOS 12+ requires user gesture, so only start after user tap
                     video.setAttribute('playsinline', true);
-                    // iOS fix for Safari
                     constraints = {
                         audio: false,
                         video: {
-                            facingMode: { exact: "user" }
+                            facingMode: { exact: "user" },
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
                         }
                     };
                 }
@@ -164,19 +169,15 @@
             }
         }
 
-        // Only start camera after user interaction on iOS
         function ensureCameraReady() {
-            if (video.srcObject) return; // Already started
+            if (video.srcObject) return;
             startCamera();
         }
 
-        // On load, for iOS, require user to tap to enable camera
         if (isIOS()) {
-            // Wait for first user tap to start camera, to comply with iOS autoplay policy
             document.body.addEventListener('touchstart', ensureCameraReady, { once: true });
             startButton.addEventListener('touchstart', ensureCameraReady, { once: true });
         } else {
-            // On desktop/Android, start camera immediately
             startCamera();
         }
 
@@ -211,8 +212,6 @@
         }
 
         function downloadImages() {
-            // On iOS, download must be triggered by user gesture
-            // Also, iOS Safari downloads differently; use workaround
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             const imageWidth = imageStrip[0].naturalWidth || 150;
@@ -232,7 +231,6 @@
             }
 
             const dataURL = canvas.toDataURL('image/png');
-            // iOS Safari download workaround
             if (isIOS()) {
                 const newTab = window.open(dataURL, '_blank');
                 if (!newTab) {
@@ -248,7 +246,6 @@
 
         startButton.addEventListener('click', captureImages);
         downloadButton.addEventListener('click', downloadImages);
-        // For iOS, allow tap on download as well
         if (isIOS()) {
             downloadButton.addEventListener('touchend', downloadImages);
         }
