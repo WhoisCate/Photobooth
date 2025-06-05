@@ -49,38 +49,36 @@
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            gap: 7px;
+            gap: 11px;
             position: absolute;
-            left: -100px;
+            left: -200px; /* Đẩy filter sang trái nhiều hơn */
             top: 10px;
             z-index: 2;
             background: rgba(255, 255, 255, 0.85);
             border-radius: 14px;
-            padding: 8px 8px 8px 10px;
+            padding: 10px 12px 10px 14px;
             box-shadow: 0 2px 12px 0 #ffd5e3a8;
+            min-width: 170px;
         }
         .filter-label {
             font-weight: bold;
             color: #ffb3c2;
-            margin-bottom: 4px;
+            margin-bottom: 7px;
             font-size: 15px;
         }
-        .filter-btn {
-            background-color: #ffcedaff;
-            border: none;
-            padding: 5px 14px;
-            border-radius: 18px;
-            cursor: pointer;
-            font-size: 13px;
-            color: white;
-            margin: 0 0 2px 0;
-            transition: background 0.2s;
-            min-width: 76px;
-            text-align: left;
+        .filter-slider-label {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 14px;
+            margin-bottom: 1px;
         }
-        .filter-btn.active,
-        .filter-btn:hover {
-            background-color: #e89595;
+        .filter-slider-group {
+            width: 100%;
+        }
+        .filter-slider {
+            width: 100%;
+            accent-color: #ffceda;
         }
         .image-strip {
             display: flex;
@@ -138,7 +136,7 @@
                 padding: 0 10vw;
             }
             .filter-controls {
-                left: -60px;
+                left: -90px;
             }
         }
         @media (max-width: 600px) {
@@ -179,9 +177,14 @@
                 padding: 8px 0 0 0;
                 margin: 0 0 13px 0;
                 left: unset !important;
+                min-width: 0;
             }
             .filter-label {
                 font-size: 14px;
+            }
+            .filter-slider-group {
+                width: 88px;
+                min-width: 80px;
             }
         }
         #ios-download-banner {
@@ -213,18 +216,58 @@
         <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
         <div class="layout">
             <div class="video-container">
-                <!-- Filter Controls -->
+                <!-- Filter Controls: sliders -->
                 <div class="filter-controls" id="filter-controls">
-                    <span class="filter-label">Filter:</span>
-                    <button class="filter-btn active" data-filter="none">None</button>
-                    <button class="filter-btn" data-filter="grayscale(1)">Grayscale</button>
-                    <button class="filter-btn" data-filter="sepia(1)">Sepia</button>
-                    <button class="filter-btn" data-filter="invert(1)">Invert</button>
-                    <button class="filter-btn" data-filter="contrast(2)">High Contrast</button>
-                    <button class="filter-btn" data-filter="brightness(1.5)">Bright</button>
-                    <button class="filter-btn" data-filter="blur(2px)">Blur</button>
-                    <button class="filter-btn" data-filter="hue-rotate(90deg)">Hue Rotate</button>
-                    <button class="filter-btn" data-filter="saturate(3)">Saturate</button>
+                    <span class="filter-label">Hiệu ứng ảnh</span>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Đen Trắng</span>
+                            <span id="grayscale-value">0</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.01" value="0" id="grayscale" class="filter-slider">
+                    </div>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Độ Sáng</span>
+                            <span id="brightness-value">1</span>
+                        </div>
+                        <input type="range" min="0.5" max="2" step="0.01" value="1" id="brightness" class="filter-slider">
+                    </div>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Cổ Điển</span>
+                            <span id="sepia-value">0</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.01" value="0" id="sepia" class="filter-slider">
+                    </div>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Mờ</span>
+                            <span id="blur-value">0</span>
+                        </div>
+                        <input type="range" min="0" max="5" step="0.01" value="0" id="blur" class="filter-slider">
+                    </div>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Vệt nắng</span>
+                            <span id="sunflare-value">0</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.01" value="0" id="sunflare" class="filter-slider">
+                    </div>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Nhiễu hạt</span>
+                            <span id="noise-value">0</span>
+                        </div>
+                        <input type="range" min="0" max="1" step="0.01" value="0" id="noise" class="filter-slider">
+                    </div>
+                    <div class="filter-slider-group">
+                        <div class="filter-slider-label">
+                            <span>Làm Mịn</span>
+                            <span id="smooth-value">0</span>
+                        </div>
+                        <input type="range" min="0" max="10" step="0.1" value="0" id="smooth" class="filter-slider">
+                    </div>
                 </div>
                 <video id="video" autoplay playsinline></video>
                 <div id="countdown" class="countdown">3</div>
@@ -249,7 +292,6 @@
         function isAndroid() {
             return /Android/i.test(navigator.userAgent);
         }
-        // Đã bao gồm luôn cả Android cho việc xử lý đặc biệt nếu cần
         const video = document.getElementById('video');
         const startButton = document.getElementById('start');
         const downloadButton = document.getElementById('download');
@@ -257,21 +299,61 @@
         const imageStrip = document.getElementById('image-strip').getElementsByTagName('img');
         const iosBanner = document.getElementById('ios-download-banner');
         const iosDownloadLink = document.getElementById('ios-download-link');
-        const filterControls = document.getElementById('filter-controls');
-        const filterButtons = filterControls.getElementsByClassName('filter-btn');
 
-        let currentFilter = "none";
+        // Sliders for filters
+        const grayscale = document.getElementById('grayscale');
+        const brightness = document.getElementById('brightness');
+        const sepia = document.getElementById('sepia');
+        const blur = document.getElementById('blur');
+        const sunflare = document.getElementById('sunflare');
+        const noise = document.getElementById('noise');
+        const smooth = document.getElementById('smooth');
 
-        // Filter control
-        for (const btn of filterButtons) {
-            btn.addEventListener('click', function() {
-                for (const b of filterButtons) b.classList.remove('active');
-                btn.classList.add('active');
-                currentFilter = btn.getAttribute('data-filter');
-                video.style.filter = currentFilter;
-            });
+        // Value indicators
+        const grayscaleValue = document.getElementById('grayscale-value');
+        const brightnessValue = document.getElementById('brightness-value');
+        const sepiaValue = document.getElementById('sepia-value');
+        const blurValue = document.getElementById('blur-value');
+        const sunflareValue = document.getElementById('sunflare-value');
+        const noiseValue = document.getElementById('noise-value');
+        const smoothValue = document.getElementById('smooth-value');
+
+        // Update value indicators
+        function updateSliderValues() {
+            grayscaleValue.textContent = grayscale.value;
+            brightnessValue.textContent = brightness.value;
+            sepiaValue.textContent = sepia.value;
+            blurValue.textContent = blur.value;
+            sunflareValue.textContent = sunflare.value;
+            noiseValue.textContent = noise.value;
+            smoothValue.textContent = smooth.value;
         }
-        video.style.filter = currentFilter;
+        grayscale.addEventListener('input', updateSliderValues);
+        brightness.addEventListener('input', updateSliderValues);
+        sepia.addEventListener('input', updateSliderValues);
+        blur.addEventListener('input', updateSliderValues);
+        sunflare.addEventListener('input', updateSliderValues);
+        noise.addEventListener('input', updateSliderValues);
+        smooth.addEventListener('input', updateSliderValues);
+        updateSliderValues();
+
+        function getFilterString() {
+            return `
+                grayscale(${grayscale.value})
+                brightness(${brightness.value})
+                sepia(${sepia.value})
+                blur(${blur.value}px)
+                contrast(${1 + parseFloat(smooth.value)/10})
+            `.replace(/\s+/g, ' ');
+        }
+
+        // Update video filter in realtime
+        [grayscale, brightness, sepia, blur, smooth].forEach(slider => {
+            slider.addEventListener('input', () => {
+                video.style.filter = getFilterString();
+            });
+        });
+        video.style.filter = getFilterString();
 
         const CAPTURE_WIDTH = 800;
         const CAPTURE_HEIGHT = 533;
@@ -285,7 +367,6 @@
                         height: { ideal: CAPTURE_HEIGHT }
                     }
                 };
-                // iOS & Android có thể cần playsinline để không bị full screen
                 if (isIOS() || isAndroid()) {
                     video.setAttribute('playsinline', true);
                 }
@@ -302,7 +383,6 @@
             startCamera();
         }
 
-        // Trên mobile, cần thao tác user mới cho phép camera
         if (isIOS() || isAndroid()) {
             document.body.addEventListener('touchstart', ensureCameraReady, { once: true });
             startButton.addEventListener('touchstart', ensureCameraReady, { once: true });
@@ -311,7 +391,6 @@
             startCamera();
         }
 
-        // Lật ảnh khi chụp từ video (video đang bị scaleX(-1)), áp dụng filter
         async function captureImages() {
             for (let i = 0; i < 4; i++) {
                 await startCountdown();
@@ -324,9 +403,39 @@
                 ctx.save();
                 ctx.translate(vW, 0);
                 ctx.scale(-1, 1);
-                ctx.filter = currentFilter;
+                ctx.filter = getFilterString();
                 ctx.drawImage(video, 0, 0, vW, vH);
                 ctx.restore();
+
+                // Sun Flare effect
+                if (parseFloat(sunflare.value) > 0) {
+                    ctx.globalAlpha = sunflare.value;
+                    let gradient = ctx.createRadialGradient(
+                        vW * 0.8, vH * 0.2, 10,
+                        vW * 0.8, vH * 0.2, vW * 0.5
+                    );
+                    gradient.addColorStop(0, 'rgba(255,255,200,0.7)');
+                    gradient.addColorStop(1, 'rgba(255,255,200,0)');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(vW * 0.8, vH * 0.2, vW * 0.5, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+
+                // Noise effect
+                if (parseFloat(noise.value) > 0) {
+                    let imgData = ctx.getImageData(0, 0, vW, vH);
+                    let data = imgData.data;
+                    for (let j = 0; j < data.length; j += 4) {
+                        let rand = (Math.random() - 0.5) * 255 * noise.value * 0.2;
+                        data[j] = Math.min(255, Math.max(0, data[j] + rand));
+                        data[j+1] = Math.min(255, Math.max(0, data[j+1] + rand));
+                        data[j+2] = Math.min(255, Math.max(0, data[j+2] + rand));
+                    }
+                    ctx.putImageData(imgData, 0, 0);
+                }
+
                 imageStrip[i].src = canvas.toDataURL('image/png');
                 imageStrip[i].width = 90;
                 imageStrip[i].height = 60;
@@ -338,11 +447,9 @@
                 countdown.style.display = 'block';
                 let count = 3;
                 countdown.innerText = count;
-
                 const interval = setInterval(() => {
                     count--;
                     countdown.innerText = count;
-
                     if (count === 0) {
                         clearInterval(interval);
                         countdown.style.display = 'none';
@@ -352,7 +459,6 @@
             });
         }
 
-        // Ghép photostrip, xuất PNG
         function downloadImages() {
             let imageWidth = imageStrip[0].naturalWidth || CAPTURE_WIDTH;
             let imageHeight = imageStrip[0].naturalHeight || CAPTURE_HEIGHT;
@@ -369,7 +475,6 @@
             }
 
             const dataURL = canvas.toDataURL('image/png');
-            // iOS: dùng banner tải về vì không auto download được
             if (isIOS()) {
                 iosDownloadLink.href = dataURL;
                 iosDownloadLink.setAttribute('download', 'photo_strip.png');
@@ -378,7 +483,6 @@
                     iosBanner.style.display = 'none';
                 }, 60000);
             } else if (isAndroid()) {
-                // Android Chrome: thử auto download, fallback nếu cần
                 try {
                     const a = document.createElement('a');
                     a.href = dataURL;
@@ -387,11 +491,9 @@
                     a.click();
                     document.body.removeChild(a);
                 } catch (e) {
-                    // Fallback: mở tab mới với ảnh
                     window.open(dataURL, '_blank');
                 }
             } else {
-                // Desktop
                 const a = document.createElement('a');
                 a.href = dataURL;
                 a.download = 'photo_strip.png';
@@ -401,7 +503,6 @@
 
         startButton.addEventListener('click', captureImages);
         downloadButton.addEventListener('click', downloadImages);
-        // Mobile: hỗ trợ cả touchend
         if (isIOS() || isAndroid()) {
             downloadButton.addEventListener('touchend', downloadImages);
         }
