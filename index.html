@@ -86,14 +86,33 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+        /* iOS specific fixes for full screen and layout */
+        @media (max-width: 600px) {
+            .layout {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .video-container {
+                width: 95vw;
+                height: 50vw;
+                max-width: 98vw;
+                max-height: 60vw;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 20px;
+                padding: 0;
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
+        <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
         <div class="layout">
             <div class="video-container">
-                <video id="video" autoplay></video>
+                <video id="video" autoplay playsinline></video>
                 <div id="countdown" class="countdown">3</div>
             </div>
             <div class="image-strip" id="image-strip">
@@ -110,15 +129,56 @@
     </div>
 
     <script>
+        // iOS camera compatibility function
+        function isIOS() {
+            return /iP(ad|hone|od)/.test(navigator.userAgent);
+        }
+
         const video = document.getElementById('video');
         const startButton = document.getElementById('start');
         const downloadButton = document.getElementById('download');
         const countdown = document.getElementById('countdown');
         const imageStrip = document.getElementById('image-strip').getElementsByTagName('img');
 
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            video.srcObject = stream;
-        });
+        // iOS: Use facingMode workaround, force inline video
+        async function startCamera() {
+            try {
+                let constraints = { video: { facingMode: "user" } };
+                // iOS: Must use 'playsinline' and request camera after user interaction
+                if (isIOS()) {
+                    // iOS 12+ requires user gesture, so only start after user tap
+                    video.setAttribute('playsinline', true);
+                    // iOS fix for Safari
+                    constraints = {
+                        audio: false,
+                        video: {
+                            facingMode: { exact: "user" }
+                        }
+                    };
+                }
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                video.play();
+            } catch (err) {
+                alert('Camera access denied or not supported: ' + err.message);
+            }
+        }
+
+        // Only start camera after user interaction on iOS
+        function ensureCameraReady() {
+            if (video.srcObject) return; // Already started
+            startCamera();
+        }
+
+        // On load, for iOS, require user to tap to enable camera
+        if (isIOS()) {
+            // Wait for first user tap to start camera, to comply with iOS autoplay policy
+            document.body.addEventListener('touchstart', ensureCameraReady, { once: true });
+            startButton.addEventListener('touchstart', ensureCameraReady, { once: true });
+        } else {
+            // On desktop/Android, start camera immediately
+            startCamera();
+        }
 
         async function captureImages() {
             for (let i = 0; i < 4; i++) {
@@ -151,32 +211,47 @@
         }
 
         function downloadImages() {
+            // On iOS, download must be triggered by user gesture
+            // Also, iOS Safari downloads differently; use workaround
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-            const imageWidth = imageStrip[0].naturalWidth;
-            const imageHeight = imageStrip[0].naturalHeight;
+            const imageWidth = imageStrip[0].naturalWidth || 150;
+            const imageHeight = imageStrip[0].naturalHeight || 100;
 
             canvas.width = imageWidth;
             canvas.height = imageHeight * 4;
 
             for (let i = 0; i < 4; i++) {
                 if (imageStrip[i].src) {
-                    context.save(); 
-                    context.translate(imageWidth, i * imageHeight); 
-                    context.scale(-1, 1); 
+                    context.save();
+                    context.translate(imageWidth, i * imageHeight);
+                    context.scale(-1, 1);
                     context.drawImage(imageStrip[i], 0, 0, imageWidth, imageHeight);
-                    context.restore(); 
+                    context.restore();
                 }
             }
 
-            const a = document.createElement('a');
-            a.href = canvas.toDataURL('image/png');
-            a.download = 'photo_strip.png';
-            a.click();
+            const dataURL = canvas.toDataURL('image/png');
+            // iOS Safari download workaround
+            if (isIOS()) {
+                const newTab = window.open(dataURL, '_blank');
+                if (!newTab) {
+                    alert('Popup blocked! Please allow popups to download.');
+                }
+            } else {
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = 'photo_strip.png';
+                a.click();
+            }
         }
 
         startButton.addEventListener('click', captureImages);
         downloadButton.addEventListener('click', downloadImages);
+        // For iOS, allow tap on download as well
+        if (isIOS()) {
+            downloadButton.addEventListener('touchend', downloadImages);
+        }
     </script>
 </body>
 </html>
