@@ -52,11 +52,11 @@
             background-color: #ffcedaff;
         }
         .image-strip img {
-            width: 200px; /* Lớn hơn */
+            width: 200px;
             height: 133px;
             background-color: #ffffffff;
             border: 1px solid #ffcedaff;
-            object-fit: contain; /* Để ảnh không bị crop */
+            object-fit: contain;
             transform: scaleX(-1);
         }
         .controls {
@@ -131,8 +131,8 @@
     <div class="container">
         <!-- iOS download banner -->
         <div id="ios-download-banner">
-            Ảnh đã sẵn sàng – Nhấn vào đây để tải về:
-            <a id="ios-download-link" href="#" target="_blank" download="photo_strip.png">TẢI XUỐNG</a>
+            Ảnh đã sẵn sàng – Nhấn và giữ vào <span style="font-weight:bold">liên kết này</span> rồi chọn "Tải về" hoặc "Lưu hình ảnh":
+            <a id="ios-download-link" href="#" target="_blank" rel="noopener noreferrer">TẢI XUỐNG</a>
         </div>
         <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
         <div class="layout">
@@ -210,19 +210,24 @@
             startCamera();
         }
 
+        // Sửa TẠI ĐÂY: lật lại ảnh khi chụp từ video để lưu không bị ngược
         async function captureImages() {
             for (let i = 0; i < 4; i++) {
                 await startCountdown();
-                // Luôn chụp với kích thước lớn hơn
                 const canvas = document.createElement('canvas');
-                // Ưu tiên độ phân giải video, fallback về CAPTURE_WIDTH/HEIGHT nếu không có
                 const vW = video.videoWidth || CAPTURE_WIDTH;
                 const vH = video.videoHeight || CAPTURE_HEIGHT;
                 canvas.width = vW;
                 canvas.height = vH;
-                canvas.getContext('2d').drawImage(video, 0, 0, vW, vH);
+                const ctx = canvas.getContext('2d');
+                // Lật lại ảnh từ video khi vẽ lên canvas (để lưu về đúng chiều)
+                ctx.save();
+                ctx.translate(vW, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(video, 0, 0, vW, vH);
+                ctx.restore();
                 imageStrip[i].src = canvas.toDataURL('image/png');
-                imageStrip[i].width = 200; // Giữ kích thước hiển thị lớn
+                imageStrip[i].width = 200;
                 imageStrip[i].height = 133;
             }
         }
@@ -247,7 +252,6 @@
         }
 
         function downloadImages() {
-            // Sử dụng kích thước ảnh lớn nhất đã capture
             let imageWidth = imageStrip[0].naturalWidth || CAPTURE_WIDTH;
             let imageHeight = imageStrip[0].naturalHeight || CAPTURE_HEIGHT;
 
@@ -269,10 +273,11 @@
             const dataURL = canvas.toDataURL('image/png');
             if (isIOS()) {
                 iosDownloadLink.href = dataURL;
+                iosDownloadLink.setAttribute('download', 'photo_strip.png');
                 iosBanner.style.display = 'flex';
-                const hide = () => iosBanner.style.display = 'none';
-                iosDownloadLink.addEventListener('click', hide, { once: true });
-                setTimeout(hide, 30000);
+                setTimeout(() => {
+                    iosBanner.style.display = 'none';
+                }, 60000);
             } else {
                 const a = document.createElement('a');
                 a.href = dataURL;
