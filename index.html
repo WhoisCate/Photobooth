@@ -49,6 +49,7 @@
             align-items: center;
             justify-content: center;
             gap: 18px;
+            flex-wrap: wrap;
         }
         .filter-btn {
             background-color: #ffcedaff;
@@ -58,7 +59,7 @@
             cursor: pointer;
             font-size: 14px;
             color: white;
-            margin: 0 2px;
+            margin: 0 2px 6px 2px;
             transition: background 0.2s;
         }
         .filter-btn.active,
@@ -213,16 +214,12 @@
         // Handle filter button click
         for (const btn of filterButtons) {
             btn.addEventListener('click', function() {
-                // Remove active class from all
                 for (const b of filterButtons) b.classList.remove('active');
-                // Add active class to this
                 btn.classList.add('active');
-                // Set filter
                 currentFilter = btn.getAttribute('data-filter');
                 video.style.filter = currentFilter;
             });
         }
-        // Set initial filter
         video.style.filter = currentFilter;
 
         // Giá trị mặc định lớn hơn cho canvas chụp
@@ -324,7 +321,6 @@
 
             for (let i = 0; i < 4; i++) {
                 if (imageStrip[i].src) {
-                    // Vẽ đúng chiều, KHÔNG lật lại (không translate/scale như trước nữa)
                     context.drawImage(imageStrip[i], 0, i * imageHeight, imageWidth, imageHeight);
                 }
             }
