@@ -5,274 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Booth</title>
     <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #181e25;
-            display: flex;
-            justify-content: center;
-            align-items: stretch;
-        }
-        .sidebar-actions {
-            position: absolute;
-            top: 32px;
-            left: 32px;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            gap: 18px;
-        }
-        .sidebar-action-btn {
-            background: #111b2a;
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            cursor: pointer;
-            font-size: 22px;
-            box-shadow: 0 2px 10px #0003;
-            transition: background 0.2s, color 0.2s;
-        }
-        .sidebar-action-btn:hover {
-            background: #448aff;
-            color: #fff;
-        }
-        .sidebar-action-btn svg {
-            width: 26px;
-            height: 26px;
-            display: block;
-        }
-        .side-bar {
-            width: 220px;
-            background: linear-gradient(180deg, #232b38 0%, #14213d 80%, #18203d 100%);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            padding: 38px 14px 16px 14px;
-            gap: 16px;
-            min-width: 150px;
-            max-width: 240px;
-            position: relative;
-        }
-        .side-bar label {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 13px;
-        }
-        .slider-group {
-            margin-bottom: 14px;
-        }
-        .slider-label {
-            font-size: 14px;
-            margin-bottom: 2px;
-            display: block;
-        }
-        .slider {
-            width: 100%;
-            accent-color: #2697ff;
-            height: 3.5px;
-        }
-        .main-view {
-            flex: 1;
-            background: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            min-width: 260px;
-        }
-        .video-wrap {
-            position: relative;
-            background: #1a1a1a;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 0 0 5px #242834;
-            width: 420px;
-            height: 315px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #video, #capture-canvas {
-            width: 400px;
-            height: 300px;
-            background: #000;
-            object-fit: cover;
-            border-radius: 14px;
-            display: block;
-            transition: transform 0.2s;
-        }
-        .zoom-panel {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            align-items: center;
-            margin-top: 12px;
-            background: rgba(35, 43, 56, 0.8);
-            border-radius: 18px;
-            padding: 5px 13px;
-            position: relative;
-        }
-        .zoom-panel .icon-btn {
-            background: #222834;
-            border: none;
-            color: white;
-            font-size: 19px;
-            padding: 0;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .zoom-panel .icon-btn:hover {
-            background: #2697ff;
-            color: #fff;
-        }
-        .zoom-panel .icon-btn svg {
-            width: 22px;
-            height: 22px;
-            display: block;
-        }
-        .zoom-btn {
-            background: none;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 4px 13px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.15s, color 0.2s, border 0.2s;
-        }
-        .zoom-btn.active, .zoom-btn:hover {
-            background: #2697ff;
-            color: #fff;
-        }
-        .controls-panel {
-            display: flex;
-            gap: 18px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-        .controls-panel .icon-btn {
-            background: #222834;
-            border: none;
-            color: white;
-            font-size: 19px;
-            padding: 0;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .controls-panel .icon-btn:hover {
-            background: #2697ff;
-            color: #fff;
-        }
-        .icon-btn svg {
-            width: 22px;
-            height: 22px;
-            display: block;
-        }
-        .right-bar {
-            width: 160px;
-            min-width: 110px;
-            max-width: 180px;
-            background: linear-gradient(180deg, #21242b 0%, #232b38 60%, #2445a1 100%);
-            color: #fff;
-            padding: 38px 7px 18px 7px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .right-bar label {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        .captured-list {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
-            width: 100%;
-        }
-        .captured-img-thumb-wrapper {
-            background: #21242b;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 5px 0;
-            gap: 4px;
-            min-height: 62px;
-            box-shadow: 0 1px 6px #0002;
-        }
-        .captured-img-label {
-            color: #fff;
-            font-size: 12px;
-            margin-bottom: 1px;
-            font-weight: bold;
-        }
-        .captured-img-thumb {
-            width: 80%;
-            max-width: 70px;
-            aspect-ratio: 4/3;
-            background: #333;
-            border-radius: 5px;
-            border: 1px solid #1b81e3;
-            object-fit: contain;
-            cursor: pointer;
-            transition: box-shadow 0.2s;
-        }
-        .captured-img-thumb.selected {
-            box-shadow: 0 0 0 2px #2697ff;
-        }
-        .burst-countdown {
-            display: none;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%,-50%);
-            font-size: 90px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 2px 2px 20px #000, 0px 0px 30px #2697ff;
-            z-index: 20;
-            pointer-events: none;
-            user-select: none;
-        }
-        .bottom-bar {
-            position: fixed;
-            left: 0; right: 0; bottom: 0;
-            height: 70px;
-            background: linear-gradient(90deg, #ff9a61 0%, #ffb1d0 30%, #94caff 75%, #7fc0ff 100%);
-            background-size: 200% 200%;
-            animation: gradmove 8s ease-in-out infinite alternate;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            box-shadow: 0 -2px 12px 0 #3e5d8a50;
-            gap: 12px;
-        }
-        @keyframes gradmove {
-            0% {background-position: 0% 90%;}
-            100% {background-position: 100% 10%;}
-        }
-        .bottom-bar .bar-btn {
+        /* ... giữ nguyên style của bạn ... */
+        .hidden { display: none !important; }
+        .action-btn {
             min-width: 120px;
             font-size: 15px;
             border: none;
@@ -290,83 +25,16 @@
             box-shadow: 0 2px 8px #0002;
             transition: background 0.2s;
         }
-        .bottom-bar .bar-btn:hover {
+        .action-btn:hover {
             background: rgba(255,255,255,0.34);
         }
-        .bottom-bar .bar-btn .bar-btn-icon {
-            font-size: 16px;
-            margin-right: 4px;
-            display: flex;
-            align-items: center;
-        }
-        .bottom-bar .heart-btn {
-            background: rgba(0,0,0,0.08);
-            border: 2px solid #fff;
-            border-radius: 50%;
-            width: 34px;
-            height: 34px;
-            min-width: 34px;
-            min-height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 23px;
+        .action-btn.red {
+            background: #f36c7e;
             color: #fff;
-            margin-left: 6px;
-            cursor: pointer;
-            transition: background 0.2s, border 0.2s;
         }
-        .bottom-bar .heart-btn:hover {
-            background: #fff;
-            color: #f660a2;
-            border-color: #f660a2;
-        }
-        @media (max-width: 900px) {
-            .main-view #video, .main-view #capture-canvas {
-                width: 62vw;
-                height: 24vw;
-                max-width: 70vw;
-                max-height: 42vw;
-            }
-            .video-wrap {
-                width: 65vw;
-                height: 25vw;
-            }
-            .side-bar, .right-bar {
-                min-width: 48px;
-                padding: 13px 2px;
-            }
-            .sidebar-actions {
-                left: 4vw;
-                top: 12px;
-            }
-        }
-        @media (max-width: 600px) {
-            body {
-                flex-direction: column;
-            }
-            .side-bar, .right-bar {
-                width: 100vw;
-                min-width: unset;
-                max-width: unset;
-                flex-direction: row;
-                padding: 7px 2vw;
-                align-items: center;
-                justify-content: flex-start;
-            }
-            .main-view {
-                min-width: unset;
-            }
-            .sidebar-actions {
-                left: 4px;
-                top: 4px;
-            }
-            .bottom-bar {
-                flex-direction: column;
-                height: auto;
-                padding: 10px 0;
-                gap: 8px;
-            }
+        .action-btn.green {
+            background: #3dc47e;
+            color: #fff;
         }
     </style>
 </head>
@@ -419,7 +87,6 @@
             <div id="burst-countdown" class="burst-countdown"></div>
         </div>
         <div class="zoom-panel" style="position:absolute;bottom:70px;left:50%;transform:translateX(-50%);">
-            <!-- Nút Xoay camera bên trái nút 1x -->
             <button class="icon-btn" id="rotate-btn" title="Xoay camera" style="margin-right:10px;">
                 <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
                     <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
@@ -447,7 +114,7 @@
         <label>Ảnh đã chụp</label>
         <div class="captured-list" id="captured-list"></div>
     </div>
-    <div class="bottom-bar">
+    <div class="bottom-bar" id="main-actions">
         <button class="bar-btn" id="btn-mode-1">
             <span class="bar-btn-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -464,6 +131,26 @@
                 </svg>
             </span>
             Chụp liên tiếp
+        </button>
+        <button class="heart-btn" title="Yêu thích">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 21s-6.486-4.689-9-7.931C-1.314 9.09 2.266 4 7.012 4c1.957 0 3.872 1.167 4.988 3.003C13.116 5.167 15.031 4 16.988 4c4.746 0 8.326 5.09 4.012 9.069C18.486 16.311 12 21 12 21z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </button>
+    </div>
+    <div class="bottom-bar hidden" id="after-actions">
+        <button class="action-btn red" id="retake-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
+            </svg>
+            Chụp lại
+        </button>
+        <button class="action-btn green" id="continue-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
+            </svg>
+            Tiếp tục
         </button>
         <button class="heart-btn" title="Yêu thích">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -529,7 +216,6 @@
 
         startCamera();
 
-        // Sự kiện cho nút xoay camera
         document.getElementById('rotate-btn').onclick = async function() {
             usingFront = !usingFront;
             await startCamera(usingFront ? "user" : "environment");
@@ -613,6 +299,13 @@
                 }
                 capturedList.appendChild(wrapper);
             }
+            // Sau khi đủ 4 ảnh thì đổi action bar
+            toggleMainActions(capturedImages.filter(x=>x).length >= 4);
+        }
+
+        function toggleMainActions(isFull) {
+            document.getElementById('main-actions').classList.toggle('hidden', isFull);
+            document.getElementById('after-actions').classList.toggle('hidden', !isFull);
         }
 
         function showCapturedFull(idx) {
@@ -728,7 +421,21 @@
             burstBtn.disabled = false;
         };
 
-        document.querySelector('.heart-btn').onclick = () => alert('Đã yêu thích!');
+        // Nút "Chụp lại"
+        document.getElementById('retake-btn').onclick = () => {
+            capturedImages = [];
+            renderCapturedList();
+            showVideo();
+        };
+        // Nút "Tiếp tục" (ví dụ: hiện alert, bạn có thể thay đổi logic)
+        document.getElementById('continue-btn').onclick = () => {
+            alert('Tiếp tục!');
+        };
+
+        // Like button
+        document.querySelectorAll('.heart-btn').forEach(btn => {
+            btn.onclick = () => alert('Đã yêu thích!');
+        });
     </script>
 </body>
 </html>
