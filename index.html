@@ -16,8 +16,8 @@
         }
         .sidebar-actions {
             position: absolute;
-            top: 28px;
-            left: 28px;
+            top: 32px;
+            left: 32px;
             z-index: 10;
             display: flex;
             flex-direction: row;
@@ -48,32 +48,34 @@
             display: block;
         }
         .side-bar {
-            width: 230px;
-            background: linear-gradient(180deg, #232b38 0%, #14213d 100%);
+            width: 260px;
+            background: linear-gradient(180deg, #232b38 0%, #14213d 80%, #18203d 100%);
             color: #fff;
             display: flex;
             flex-direction: column;
-            padding: 24px 16px 24px 16px;
+            padding: 48px 24px 24px 24px;
             gap: 22px;
-            min-width: 170px;
-            max-width: 240px;
+            min-width: 200px;
+            max-width: 300px;
             position: relative;
         }
         .side-bar label {
             font-weight: bold;
-            font-size: 19px;
+            font-size: 21px;
             margin-bottom: 17px;
         }
         .slider-group {
-            margin-bottom: 18px;
+            margin-bottom: 22px;
         }
         .slider-label {
-            font-size: 15px;
+            font-size: 16px;
             margin-bottom: 3px;
             display: block;
         }
         .slider {
             width: 100%;
+            accent-color: #2697ff;
+            height: 5px;
         }
         .main-view {
             flex: 1;
@@ -86,56 +88,30 @@
         }
         .video-wrap {
             position: relative;
-            background: #111;
-            border-radius: 10px;
+            background: #1a1a1a;
+            border-radius: 22px;
             overflow: hidden;
+            box-shadow: 0 0 0 6px #242834;
         }
         #video, #capture-canvas {
-            width: 520px;
-            height: 390px;
+            width: 600px;
+            height: 450px;
             background: #000;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 22px;
             display: block;
             transition: transform 0.2s;
-        }
-        .controls-panel {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 18px;
-        }
-        .controls-panel button, .controls-panel .icon-btn {
-            background-color: #232b38;
-            border: none;
-            color: white;
-            font-size: 22px;
-            padding: 8px 18px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .controls-panel button:hover, .controls-panel .icon-btn:hover {
-            background: #448aff;
-            color: #fff;
-        }
-        .icon-btn svg {
-            width: 28px;
-            height: 28px;
-            display: block;
         }
         .zoom-panel {
             display: flex;
             gap: 8px;
             justify-content: center;
             align-items: center;
-            margin-bottom: 18px;
+            margin-top: 16px;
             background: rgba(35, 43, 56, 0.8);
             border-radius: 22px;
-            padding: 6px 16px;
+            padding: 6px 18px;
+            position: relative;
         }
         .zoom-btn {
             background: none;
@@ -143,27 +119,57 @@
             border: none;
             border-radius: 14px;
             padding: 6px 16px;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
             transition: background 0.15s, color 0.2s, border 0.2s;
         }
         .zoom-btn.active, .zoom-btn:hover {
-            background: #448aff;
+            background: #2697ff;
             color: #fff;
         }
-        .right-bar {
-            width: 180px;
-            min-width: 130px;
-            max-width: 220px;
-            background: linear-gradient(180deg, #21242b 0%, #232b38 100%);
+        .controls-panel {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .controls-panel .icon-btn {
+            background: #222834;
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 0;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .controls-panel .icon-btn:hover {
+            background: #2697ff;
             color: #fff;
-            padding: 24px 12px 24px 12px;
+        }
+        .icon-btn svg {
+            width: 30px;
+            height: 30px;
+            display: block;
+        }
+        .right-bar {
+            width: 220px;
+            min-width: 170px;
+            max-width: 280px;
+            background: linear-gradient(180deg, #21242b 0%, #232b38 60%, #2445a1 100%);
+            color: #fff;
+            padding: 48px 14px 24px 14px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
         .right-bar label {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 13px;
         }
@@ -171,25 +177,28 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
             width: 100%;
         }
         .captured-img-thumb-wrapper {
             background: #21242b;
-            border-radius: 7px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px 0 8px 0;
-            gap: 5px;
+            padding: 10px 0;
+            gap: 7px;
+            min-height: 110px;
+            box-shadow: 0 1px 6px #0002;
         }
         .captured-img-label {
             color: #fff;
-            font-size: 14px;
+            font-size: 16px;
             margin-bottom: 3px;
+            font-weight: bold;
         }
         .captured-img-thumb {
-            width: 100%;
+            width: 88%;
             max-width: 140px;
             aspect-ratio: 4/3;
             background: #333;
@@ -200,7 +209,7 @@
             transition: box-shadow 0.2s;
         }
         .captured-img-thumb.selected {
-            box-shadow: 0 0 0 3px #448aff;
+            box-shadow: 0 0 0 3px #2697ff;
         }
         @media (max-width: 900px) {
             .main-view #video, .main-view #capture-canvas {
@@ -245,14 +254,12 @@
     <!-- Nút Back, Fullscreen -->
     <div class="sidebar-actions">
         <button class="sidebar-action-btn" id="back-btn" title="Quay lại">
-            <!-- Back SVG -->
             <svg viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="12" fill="none"/>
                 <path d="M15.5 19L9 12.5L15.5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </button>
         <button class="sidebar-action-btn" id="fullscreen-btn" title="Toàn màn hình">
-            <!-- Fullscreen SVG -->
             <svg viewBox="0 0 24 24" fill="none">
                 <rect x="4" y="4" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/>
                 <rect x="13" y="13" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/>
@@ -291,25 +298,24 @@
             <video id="video" autoplay playsinline></video>
             <canvas id="capture-canvas" style="display:none;"></canvas>
         </div>
-        <div class="zoom-panel" style="position:absolute;bottom:72px;left:50%;transform:translateX(-50%);">
+        <div class="zoom-panel" style="position:absolute;bottom:105px;left:50%;transform:translateX(-50%);">
             <button class="zoom-btn active" data-zoom="1">1x</button>
             <button class="zoom-btn" data-zoom="2">2x</button>
             <button class="zoom-btn" data-zoom="5">5x</button>
             <button class="zoom-btn" data-zoom="99">99x</button>
         </div>
-        <div class="controls-panel" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);">
+        <div class="controls-panel" style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);">
             <button class="icon-btn" id="rotate-btn" title="Xoay camera">
-                <!-- Rotate SVG icon -->
                 <svg viewBox="0 0 24 24" fill="none">
                     <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
                 </svg>
             </button>
-            <button id="capture" title="Chụp ảnh">
+            <button class="icon-btn" id="capture" title="Chụp ảnh">
                 <svg viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
                 </svg>
             </button>
-            <button id="reset" title="Xoá tất cả">
+            <button class="icon-btn" id="reset" title="Xoá tất cả">
                 <svg viewBox="0 0 24 24" fill="none">
                     <path d="M6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V7H6V19ZM19 4H15.5L14.793 3.293C14.4024 2.90237 13.7682 2.90237 13.3776 3.293L12.5 4.172 11.6224 3.293C11.2318 2.90237 10.5976 2.90237 10.207 3.293L9.5 4H6C4.89543 4 4 4.89543 4 6V7H20V6C20 4.89543 19.1046 4 18 4Z" fill="currentColor"/>
                 </svg>
@@ -323,7 +329,6 @@
     <script>
         // Back button
         document.getElementById('back-btn').onclick = function() {
-            // Bạn có thể điều hướng về trang trước hoặc trang chính
             window.history.back();
         };
         // Fullscreen button
@@ -455,9 +460,9 @@
                 } else {
                     // Placeholder box
                     const placeholder = document.createElement('div');
-                    placeholder.style.width = "100%";
+                    placeholder.style.width = "88%";
                     placeholder.style.height = "0";
-                    placeholder.style.paddingBottom = "75%";
+                    placeholder.style.paddingBottom = "66%";
                     placeholder.style.background = "#222428";
                     placeholder.style.borderRadius = "6px";
                     placeholder.style.opacity = "0.6";
