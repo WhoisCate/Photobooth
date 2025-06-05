@@ -3,50 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Booth</title>
+    <title>Photo Booth - Clone Demo</title>
+    <link rel="icon" href="https://fotogramstudios.com/favicon.ico">
     <style>
         body {
             margin: 0;
-            height: 100vh;
             font-family: Arial, sans-serif;
             background: #181e25;
-            display: flex;
-            justify-content: center;
-            align-items: stretch;
+            min-height: 100vh;
+            width: 100vw;
         }
         .sidebar-actions {
             position: absolute;
-            top: 32px;
-            left: 32px;
+            top: 32px; left: 32px;
             z-index: 10;
-            display: flex;
-            flex-direction: row;
-            gap: 18px;
+            display: flex; gap: 18px;
         }
         .sidebar-action-btn {
             background: #111b2a;
             border: none;
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
             color: #fff;
             cursor: pointer;
             font-size: 22px;
             box-shadow: 0 2px 10px #0003;
             transition: background 0.2s, color 0.2s;
         }
-        .sidebar-action-btn:hover {
-            background: #448aff;
-            color: #fff;
-        }
-        .sidebar-action-btn svg {
-            width: 26px;
-            height: 26px;
-            display: block;
-        }
+        .sidebar-action-btn:hover { background: #448aff; color: #fff; }
+        .sidebar-action-btn svg { width: 26px; height: 26px; display: block; }
         .side-bar {
             width: 220px;
             background: linear-gradient(180deg, #232b38 0%, #14213d 80%, #18203d 100%);
@@ -55,28 +41,13 @@
             flex-direction: column;
             padding: 38px 14px 16px 14px;
             gap: 16px;
-            min-width: 150px;
-            max-width: 240px;
+            min-width: 150px; max-width: 240px;
             position: relative;
         }
-        .side-bar label {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 13px;
-        }
-        .slider-group {
-            margin-bottom: 14px;
-        }
-        .slider-label {
-            font-size: 14px;
-            margin-bottom: 2px;
-            display: block;
-        }
-        .slider {
-            width: 100%;
-            accent-color: #2697ff;
-            height: 3.5px;
-        }
+        .side-bar label { font-weight: bold; font-size: 18px; margin-bottom: 13px; }
+        .slider-group { margin-bottom: 14px; }
+        .slider-label { font-size: 14px; margin-bottom: 2px; display: block; }
+        .slider { width: 100%; accent-color: #2697ff; height: 3.5px; }
         .main-view {
             flex: 1;
             background: #222;
@@ -133,15 +104,8 @@
             justify-content: center;
             transition: background 0.2s;
         }
-        .zoom-panel .icon-btn:hover {
-            background: #2697ff;
-            color: #fff;
-        }
-        .zoom-panel .icon-btn svg {
-            width: 22px;
-            height: 22px;
-            display: block;
-        }
+        .zoom-panel .icon-btn:hover { background: #2697ff; color: #fff; }
+        .zoom-panel .icon-btn svg { width: 22px; height: 22px; display: block; }
         .zoom-btn {
             background: none;
             color: #fff;
@@ -152,10 +116,7 @@
             cursor: pointer;
             transition: background 0.15s, color 0.2s, border 0.2s;
         }
-        .zoom-btn.active, .zoom-btn:hover {
-            background: #2697ff;
-            color: #fff;
-        }
+        .zoom-btn.active, .zoom-btn:hover { background: #2697ff; color: #fff; }
         .controls-panel {
             display: flex;
             gap: 18px;
@@ -177,15 +138,8 @@
             justify-content: center;
             transition: background 0.2s;
         }
-        .controls-panel .icon-btn:hover {
-            background: #2697ff;
-            color: #fff;
-        }
-        .icon-btn svg {
-            width: 22px;
-            height: 22px;
-            display: block;
-        }
+        .controls-panel .icon-btn:hover { background: #2697ff; color: #fff; }
+        .icon-btn svg { width: 22px; height: 22px; display: block; }
         .right-bar {
             width: 160px;
             min-width: 110px;
@@ -197,17 +151,9 @@
             flex-direction: column;
             align-items: flex-start;
         }
-        .right-bar label {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+        .right-bar label { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
         .captured-list {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
-            width: 100%;
+            flex: 1; display: flex; flex-direction: column; gap: 11px; width: 100%;
         }
         .captured-img-thumb-wrapper {
             background: #21242b;
@@ -220,15 +166,9 @@
             min-height: 62px;
             box-shadow: 0 1px 6px #0002;
         }
-        .captured-img-label {
-            color: #fff;
-            font-size: 12px;
-            margin-bottom: 1px;
-            font-weight: bold;
-        }
+        .captured-img-label { color: #fff; font-size: 12px; margin-bottom: 1px; font-weight: bold; }
         .captured-img-thumb {
-            width: 80%;
-            max-width: 70px;
+            width: 80%; max-width: 70px;
             aspect-ratio: 4/3;
             background: #333;
             border-radius: 5px;
@@ -237,15 +177,11 @@
             cursor: pointer;
             transition: box-shadow 0.2s;
         }
-        .captured-img-thumb.selected {
-            box-shadow: 0 0 0 2px #2697ff;
-        }
+        .captured-img-thumb.selected { box-shadow: 0 0 0 2px #2697ff; }
         .burst-countdown {
             display: none;
             position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%,-50%);
+            left: 50%; top: 50%; transform: translate(-50%,-50%);
             font-size: 90px;
             font-weight: bold;
             color: #fff;
@@ -290,14 +226,9 @@
             box-shadow: 0 2px 8px #0002;
             transition: background 0.2s;
         }
-        .bottom-bar .bar-btn:hover {
-            background: rgba(255,255,255,0.34);
-        }
+        .bottom-bar .bar-btn:hover { background: rgba(255,255,255,0.34); }
         .bottom-bar .bar-btn .bar-btn-icon {
-            font-size: 16px;
-            margin-right: 4px;
-            display: flex;
-            align-items: center;
+            font-size: 16px; margin-right: 4px; display: flex; align-items: center;
         }
         .bottom-bar .heart-btn {
             background: rgba(0,0,0,0.08);
@@ -316,12 +247,7 @@
             cursor: pointer;
             transition: background 0.2s, border 0.2s;
         }
-        .bottom-bar .heart-btn:hover {
-            background: #fff;
-            color: #f660a2;
-            border-color: #f660a2;
-        }
-        /* Modal confirm style */
+        .bottom-bar .heart-btn:hover { background: #fff; color: #f660a2; border-color: #f660a2; }
         .modal-backdrop {
             position: fixed;
             left: 0; top: 0; right: 0; bottom: 0;
@@ -346,81 +272,25 @@
             0% {transform: scale(0.96) translateY(36px); opacity: 0;}
             100% {transform: scale(1) translateY(0); opacity: 1;}
         }
-        .confirm-modal h3 {
-            margin: 0 0 12px 0;
-            font-size: 21px;
-            font-weight: 700;
-            color: #232b38;
-            text-align: center;
-        }
-        .confirm-modal p {
-            margin: 0 0 24px 0;
-            font-size: 16px;
-            color: #444;
-            text-align: center;
-            line-height: 1.6;
-        }
+        .confirm-modal h3 { margin: 0 0 12px 0; font-size: 21px; font-weight: 700; color: #232b38; text-align: center;}
+        .confirm-modal p { margin: 0 0 24px 0; font-size: 16px; color: #444; text-align: center; line-height: 1.6;}
         .confirm-modal .modal-actions {
-            display: flex;
-            gap: 18px;
-            width: 100%;
-            justify-content: center;
+            display: flex; gap: 18px; width: 100%; justify-content: center;
         }
         .modal-btn {
-            font-size: 15px;
-            border: none;
-            border-radius: 18px;
-            padding: 9px 22px;
-            cursor: pointer;
-            transition: background 0.18s, color 0.18s;
-            font-weight: 600;
+            font-size: 15px; border: none; border-radius: 18px; padding: 9px 22px; cursor: pointer;
+            transition: background 0.18s, color 0.18s; font-weight: 600;
         }
-        .modal-btn.cancel {
-            background: #f4f4f4;
-            color: #232b38;
-        }
-        .modal-btn.cancel:hover {
-            background: #e1e1e1;
-        }
-        .modal-btn.confirm {
-            background: #e54c4c;
-            color: #fff;
-        }
-        .modal-btn.confirm:hover {
-            background: #c93030;
-        }
-        /* End modal confirm style */
+        .modal-btn.cancel { background: #f4f4f4; color: #232b38; }
+        .modal-btn.cancel:hover { background: #e1e1e1; }
+        .modal-btn.confirm { background: #e54c4c; color: #fff; }
+        .modal-btn.confirm:hover { background: #c93030; }
         .hidden { display: none !important; }
-        .action-btn {
-            min-width: 120px;
-            font-size: 15px;
-            border: none;
-            outline: none;
-            background: rgba(255,255,255,0.17);
-            color: #fff;
-            font-weight: 600;
-            border-radius: 20px;
-            padding: 10px 22px;
-            margin: 0 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 8px #0002;
-            transition: background 0.2s;
-        }
-        .action-btn:hover {
-            background: rgba(255,255,255,0.34);
-        }
-        .action-btn.red {
-            background: #f36c7e;
-            color: #fff;
-        }
-        .action-btn.green {
-            background: #3dc47e;
-            color: #fff;
-        }
-        /* Frame select styles - chỉ style bổ sung cho frame select */
+        .action-btn { min-width: 120px; font-size: 15px; border: none; outline: none; background: rgba(255,255,255,0.17); color: #fff; font-weight: 600; border-radius: 20px; padding: 10px 22px; margin: 0 5px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px #0002; transition: background 0.2s;}
+        .action-btn:hover { background: rgba(255,255,255,0.34);}
+        .action-btn.red { background: #f36c7e; color: #fff;}
+        .action-btn.green { background: #3dc47e; color: #fff;}
+        /* Frame select styles */
         .main-header {padding:40px 0 14px 0;text-align:center;background:#10111a;border-bottom-left-radius:54px;border-bottom-right-radius:54px;box-shadow:0 4px 24px 2px #0003;position:relative;z-index:2;}
         .main-header h1 {margin:0 0 10px 0;font-size:2.1rem;font-weight:800;letter-spacing:-1px;color:#fff;text-shadow:0 2px 12px #0b132b80;}
         .main-header p {margin:0;font-size:1.2rem;color:#fff9;font-weight:500;}
@@ -448,6 +318,11 @@
             .actions-bar {max-width:99vw;padding:12px 0 10px 0;}
         }
         @media (max-width: 600px) {
+            body {flex-direction: column;}
+            .side-bar, .right-bar {width: 100vw; min-width: unset; max-width: unset; flex-direction: row; padding: 7px 2vw; align-items: center; justify-content: flex-start;}
+            .main-view {min-width: unset;}
+            .sidebar-actions {left: 4px; top: 4px;}
+            .bottom-bar {flex-direction: column; height: auto; padding: 10px 0; gap: 8px;}
             .main-header {font-size:1.1rem;border-bottom-left-radius:26px;border-bottom-right-radius:26px;}
             .frames-scroll {gap:10px;}
             .actions-bar {flex-direction:column;gap:10px;border-radius:0;}
@@ -456,514 +331,479 @@
     </style>
 </head>
 <body>
-    <!-- Photobooth giao diện -->
-    <div class="sidebar-actions">
-        <button class="sidebar-action-btn" id="back-btn" title="Quay lại">
-            <svg viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="12" fill="none"/>
-                <path d="M15.5 19L9 12.5L15.5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        <button class="sidebar-action-btn" id="fullscreen-btn" title="Toàn màn hình">
-            <svg viewBox="0 0 24 24" fill="none">
-                <rect x="4" y="4" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/>
-                <rect x="13" y="13" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/>
-            </svg>
-        </button>
+<!-- Photobooth UI -->
+<div class="sidebar-actions">
+    <button class="sidebar-action-btn" id="back-btn" title="Quay lại">
+        <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="12" fill="none"/>
+            <path d="M15.5 19L9 12.5L15.5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <button class="sidebar-action-btn" id="fullscreen-btn" title="Toàn màn hình">
+        <svg viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/>
+            <rect x="13" y="13" width="7" height="7" rx="2" stroke="currentColor" stroke-width="2"/>
+        </svg>
+    </button>
+</div>
+<div class="side-bar">
+    <label>Hiệu Ứng Ảnh</label>
+    <div class="slider-group"><span class="slider-label">Đen Trắng</span>
+        <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="grayscale">
     </div>
-    <div class="side-bar">
-        <label>Hiệu Ứng Ảnh</label>
-        <div class="slider-group">
-            <span class="slider-label">Đen Trắng</span>
-            <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="grayscale">
-        </div>
-        <div class="slider-group">
-            <span class="slider-label">Độ Sáng</span>
-            <input class="slider" type="range" min="0.5" max="2" step="0.01" value="1" id="brightness">
-        </div>
-        <div class="slider-group">
-            <span class="slider-label">Cổ Điển</span>
-            <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="sepia">
-        </div>
-        <div class="slider-group">
-            <span class="slider-label">Mờ</span>
-            <input class="slider" type="range" min="0" max="5" step="0.1" value="0" id="blur">
-        </div>
-        <div class="slider-group">
-            <span class="slider-label">Thêm vệt nắng</span>
-            <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="hue">
-        </div>
-        <div class="slider-group">
-            <span class="slider-label">Thêm nhiễu hạt</span>
-            <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="noise">
-        </div>
+    <div class="slider-group"><span class="slider-label">Độ Sáng</span>
+        <input class="slider" type="range" min="0.5" max="2" step="0.01" value="1" id="brightness">
     </div>
-    <div class="main-view">
-        <div class="video-wrap">
-            <video id="video" autoplay playsinline></video>
-            <canvas id="capture-canvas" style="display:none;"></canvas>
-            <div id="burst-countdown" class="burst-countdown"></div>
-        </div>
-        <div class="zoom-panel" style="position:absolute;bottom:70px;left:50%;transform:translateX(-50%);">
-            <button class="icon-btn" id="rotate-btn" title="Xoay camera" style="margin-right:10px;">
-                <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
-                    <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
-                </svg>
-            </button>
-            <button class="zoom-btn active" data-zoom="1">1x</button>
-            <button class="zoom-btn" data-zoom="2">2x</button>
-            <button class="zoom-btn" data-zoom="5">5x</button>
-            <button class="zoom-btn" data-zoom="99">99x</button>
-        </div>
-        <div class="controls-panel" style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);">
-            <button class="icon-btn" id="capture" title="Chụp ảnh">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
-                </svg>
-            </button>
-            <button class="icon-btn" id="reset" title="Xoá tất cả">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V7H6V19ZM19 4H15.5L14.793 3.293C14.4024 2.90237 13.7682 2.90237 13.3776 3.293L12.5 4.172 11.6224 3.293C11.2318 2.90237 10.5976 2.90237 10.207 3.293L9.5 4H6C4.89543 4 4 4.89543 4 6V7H20V6C20 4.89543 19.1046 4 18 4Z" fill="currentColor"/>
-                </svg>
-            </button>
-        </div>
+    <div class="slider-group"><span class="slider-label">Cổ Điển</span>
+        <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="sepia">
     </div>
-    <div class="right-bar">
-        <label>Ảnh đã chụp</label>
-        <div class="captured-list" id="captured-list"></div>
+    <div class="slider-group"><span class="slider-label">Mờ</span>
+        <input class="slider" type="range" min="0" max="5" step="0.1" value="0" id="blur">
     </div>
-    <div class="bottom-bar" id="main-actions">
-        <button class="bar-btn" id="btn-mode-1">
-            <span class="bar-btn-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
-                </svg>
-            </span>
-            Chụp từng kiểu 1/4
-        </button>
-        <button class="bar-btn" id="btn-mode-2">
-            <span class="bar-btn-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <rect x="4" y="8" width="16" height="8" rx="4" stroke="currentColor" stroke-width="2"/>
-                    <rect x="8" y="4" width="8" height="16" rx="4" stroke="currentColor" stroke-width="2"/>
-                </svg>
-            </span>
-            Chụp liên tiếp
-        </button>
-        <button class="heart-btn" title="Yêu thích">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 21s-6.486-4.689-9-7.931C-1.314 9.09 2.266 4 7.012 4c1.957 0 3.872 1.167 4.988 3.003C13.116 5.167 15.031 4 16.988 4c4.746 0 8.326 5.09 4.012 9.069C18.486 16.311 12 21 12 21z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-        </button>
+    <div class="slider-group"><span class="slider-label">Thêm vệt nắng</span>
+        <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="hue">
     </div>
-    <div class="bottom-bar hidden" id="after-actions">
-        <button class="action-btn red" id="retake-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+    <div class="slider-group"><span class="slider-label">Thêm nhiễu hạt</span>
+        <input class="slider" type="range" min="0" max="1" step="0.01" value="0" id="noise">
+    </div>
+</div>
+<div class="main-view">
+    <div class="video-wrap">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="capture-canvas" style="display:none;"></canvas>
+        <div id="burst-countdown" class="burst-countdown"></div>
+    </div>
+    <div class="zoom-panel" style="position:absolute;bottom:70px;left:50%;transform:translateX(-50%);">
+        <button class="icon-btn" id="rotate-btn" title="Xoay camera" style="margin-right:10px;">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
                 <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
             </svg>
-            Chụp lại
         </button>
-        <button class="action-btn green" id="continue-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
-            </svg>
-            Tiếp tục
-        </button>
-        <button class="heart-btn" title="Yêu thích">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 21s-6.486-4.689-9-7.931C-1.314 9.09 2.266 4 7.012 4c1.957 0 3.872 1.167 4.988 3.003C13.116 5.167 15.031 4 16.988 4c4.746 0 8.326 5.09 4.012 9.069C18.486 16.311 12 21 12 21z" stroke="currentColor" stroke-width="2"/>
+        <button class="zoom-btn active" data-zoom="1">1x</button>
+        <button class="zoom-btn" data-zoom="2">2x</button>
+        <button class="zoom-btn" data-zoom="5">5x</button>
+        <button class="zoom-btn" data-zoom="99">99x</button>
+    </div>
+    <div class="controls-panel" style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);">
+        <button class="icon-btn" id="capture" title="Chụp ảnh">
+            <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
             </svg>
         </button>
+        <button class="icon-btn" id="reset" title="Xoá tất cả">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V7H6V19ZM19 4H15.5L14.793 3.293C14.4024 2.90237 13.7682 2.90237 13.3776 3.293L12.5 4.172 11.6224 3.293C11.2318 2.90237 10.5976 2.90237 10.207 3.293L9.5 4H6C4.89543 4 4 4.89543 4 6V7H20V6C20 4.89543 19.1046 4 18 4Z" fill="currentColor"/>
+            </svg>
+        </button>
     </div>
-    <!-- Modal xác nhận xóa -->
-    <div id="confirm-modal-backdrop" class="modal-backdrop hidden">
-      <div class="confirm-modal">
-        <h3>Chụp lại tất cả ảnh đã chụp?</h3>
-        <p>Ảnh đã chụp chưa được lưu, ấn chụp lại sẽ xóa tất cả ảnh hiện tại của bạn và bắt đầu phiên chụp mới.<br>
-        Bạn có chắc chắn muốn xoá hết?</p>
-        <div class="modal-actions">
-          <button class="modal-btn cancel" id="modal-cancel">Xem lại ảnh</button>
-          <button class="modal-btn confirm" id="modal-confirm">Xoá hết và chụp lại</button>
-        </div>
+</div>
+<div class="right-bar">
+    <label>Ảnh đã chụp</label>
+    <div class="captured-list" id="captured-list"></div>
+</div>
+<div class="bottom-bar" id="main-actions">
+    <button class="bar-btn" id="btn-mode-1">
+        <span class="bar-btn-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </span>
+        Chụp từng kiểu 1/4
+    </button>
+    <button class="bar-btn" id="btn-mode-2">
+        <span class="bar-btn-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="8" width="16" height="8" rx="4" stroke="currentColor" stroke-width="2"/>
+                <rect x="8" y="4" width="8" height="16" rx="4" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </span>
+        Chụp liên tiếp
+    </button>
+    <button class="heart-btn" title="Yêu thích">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 21s-6.486-4.689-9-7.931C-1.314 9.09 2.266 4 7.012 4c1.957 0 3.872 1.167 4.988 3.003C13.116 5.167 15.031 4 16.988 4c4.746 0 8.326 5.09 4.012 9.069C18.486 16.311 12 21 12 21z" stroke="currentColor" stroke-width="2"/>
+        </svg>
+    </button>
+</div>
+<div class="bottom-bar hidden" id="after-actions">
+    <button class="action-btn red" id="retake-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
+        </svg>
+        Chụp lại
+    </button>
+    <button class="action-btn green" id="continue-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M10 8l6 4-6 4V8z" fill="currentColor"/>
+        </svg>
+        Tiếp tục
+    </button>
+    <button class="heart-btn" title="Yêu thích">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 21s-6.486-4.689-9-7.931C-1.314 9.09 2.266 4 7.012 4c1.957 0 3.872 1.167 4.988 3.003C13.116 5.167 15.031 4 16.988 4c4.746 0 8.326 5.09 4.012 9.069C18.486 16.311 12 21 12 21z" stroke="currentColor" stroke-width="2"/>
+        </svg>
+    </button>
+</div>
+<!-- Modal xác nhận xóa -->
+<div id="confirm-modal-backdrop" class="modal-backdrop hidden">
+  <div class="confirm-modal">
+    <h3>Chụp lại tất cả ảnh đã chụp?</h3>
+    <p>Ảnh đã chụp chưa được lưu, ấn chụp lại sẽ xóa tất cả ảnh hiện tại của bạn và bắt đầu phiên chụp mới.<br>
+    Bạn có chắc chắn muốn xoá hết?</p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" id="modal-cancel">Xem lại ảnh</button>
+      <button class="modal-btn confirm" id="modal-confirm">Xoá hết và chụp lại</button>
+    </div>
+  </div>
+</div>
+<!-- Frame select overlay -->
+<div id="frame-select-screen" class="hidden" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(120deg,#16213e 0%,#1a2980 50%,#fbc2eb 100%);overflow:auto;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="main-header">
+      <h1>ôi giời ơi đẹp như thiên thần thế này!</h1>
+      <p>mời thiên thần chọn khung và tải ảnh về:</p>
+    </div>
+    <div class="frame-tabs" id="frame-tabs">
+      <button class="frame-tab active" data-tab="all">Tất cả</button>
+      <button class="frame-tab" data-tab="basic">Basic</button>
+      <button class="frame-tab" data-tab="birthday">Birthday</button>
+      <button class="frame-tab" data-tab="countries">Countries</button>
+      <button class="frame-tab" data-tab="cute">Cute</button>
+      <button class="frame-tab" data-tab="idol">Idol</button>
+      <button class="frame-tab" data-tab="vietnam">Vietnam</button>
+    </div>
+    <div class="frames-scroll" id="frames-scroll">
+      <div class="frame-item selected">
+        <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/ig1.png" alt="Khung 1">
+        <div class="frame-meta"><span class="icon">❤️</span> 999</div>
+      </div>
+      <div class="frame-item">
+        <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/sky1.png" alt="Khung 2">
+        <div class="frame-meta"><span class="icon">❤️</span> 2,085</div>
+      </div>
+      <div class="frame-item">
+        <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/cat1.png" alt="Khung 3">
+        <div class="frame-meta"><span class="icon">❤️</span> 1,469</div>
+      </div>
+      <div class="frame-item">
+        <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/sea1.png" alt="Khung 4">
+        <div class="frame-meta"><span class="icon">❤️</span> 1,051</div>
+      </div>
+      <div class="frame-item">
+        <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/stars1.png" alt="Khung 5">
+        <div class="frame-meta"><span class="icon">❤️</span> 1,622</div>
       </div>
     </div>
-    <!-- Frame select overlay -->
-    <div id="frame-select-screen" class="hidden" style="position:fixed;inset:0;z-index:99999;background:linear-gradient(120deg,#16213e 0%,#1a2980 50%,#fbc2eb 100%);overflow:auto;">
-      <div style="max-width:1100px;margin:0 auto;">
-        <div class="main-header">
-          <h1>ôi giời ơi đẹp như thiên thần thế này!</h1>
-          <p>mời thiên thần chọn khung và tải ảnh về:</p>
-        </div>
-        <div class="frame-tabs" id="frame-tabs">
-          <button class="frame-tab active" data-tab="all">Tất cả</button>
-          <button class="frame-tab" data-tab="basic">Basic</button>
-          <button class="frame-tab" data-tab="birthday">Birthday</button>
-          <button class="frame-tab" data-tab="countries">Countries</button>
-          <button class="frame-tab" data-tab="cute">Cute</button>
-          <button class="frame-tab" data-tab="idol">Idol</button>
-          <button class="frame-tab" data-tab="vietnam">Vietnam</button>
-        </div>
-        <div class="frames-scroll" id="frames-scroll">
-          <div class="frame-item selected">
-            <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/ig1.png" alt="Khung 1">
-            <div class="frame-meta"><span class="icon">❤️</span> 999</div>
-          </div>
-          <div class="frame-item">
-            <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/sky1.png" alt="Khung 2">
-            <div class="frame-meta"><span class="icon">❤️</span> 2,085</div>
-          </div>
-          <div class="frame-item">
-            <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/cat1.png" alt="Khung 3">
-            <div class="frame-meta"><span class="icon">❤️</span> 1,469</div>
-          </div>
-          <div class="frame-item">
-            <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/sea1.png" alt="Khung 4">
-            <div class="frame-meta"><span class="icon">❤️</span> 1,051</div>
-          </div>
-          <div class="frame-item">
-            <img class="frame-thumb" src="https://fotogramstudios.com/static/frames/stars1.png" alt="Khung 5">
-            <div class="frame-meta"><span class="icon">❤️</span> 1,622</div>
-          </div>
-        </div>
-        <div class="actions-bar">
-          <button class="action-btn green" id="btn-new-photo"><span class="icon">📷</span>CHỤP TIẾP ẢNH MỚI</button>
-          <button class="action-btn red" id="btn-order-print"><span class="icon">🖨️</span>ĐẶT IN ẢNH GIAO TẬN NƠI</button>
-          <button class="action-btn outline" id="btn-share"><span class="icon">🔗</span>Chia sẻ</button>
-        </div>
-      </div>
+    <div class="actions-bar">
+      <button class="action-btn green" id="btn-new-photo"><span class="icon">📷</span>CHỤP TIẾP ẢNH MỚI</button>
+      <button class="action-btn red" id="btn-order-print"><span class="icon">🖨️</span>ĐẶT IN ẢNH GIAO TẬN NƠI</button>
+      <button class="action-btn outline" id="btn-share"><span class="icon">🔗</span>Chia sẻ</button>
     </div>
-    <script>
-        // ... Photobooth logic như cũ ...
-        document.getElementById('back-btn').onclick = function() {
-            window.history.back();
-        };
-        document.getElementById('fullscreen-btn').onclick = function() {
-            const elem = document.documentElement;
-            if (!document.fullscreenElement) {
-                elem.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
-        };
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('capture-canvas');
-        let currentStream = null;
-        let usingFront = true;
+  </div>
+</div>
+<script>
+document.getElementById('back-btn').onclick = function() {
+    window.history.back();
+};
+document.getElementById('fullscreen-btn').onclick = function() {
+    const elem = document.documentElement;
+    if (!document.fullscreenElement) {
+        elem.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+};
+const video = document.getElementById('video');
+const canvas = document.getElementById('capture-canvas');
+let currentStream = null;
+let usingFront = true;
 
-        async function startCamera(facingMode = "user") {
-            const constraints = {
-                video: { facingMode: { exact: facingMode } },
-                audio: false
-            };
-            if (currentStream) {
-                currentStream.getTracks().forEach(track => track.stop());
-            }
+async function startCamera(facingMode = "user") {
+    const constraints = {
+        video: { facingMode: { exact: facingMode } },
+        audio: false
+    };
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+        currentStream = stream;
+        updateMirror();
+    } catch (e) {
+        if (facingMode === "user") {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: { exact: "environment" } },
+                    audio: false
+                });
                 video.srcObject = stream;
                 currentStream = stream;
+                usingFront = false;
                 updateMirror();
-            } catch (e) {
-                if (facingMode === "user") {
-                    try {
-                        const stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: { exact: "environment" } },
-                            audio: false
-                        });
-                        video.srcObject = stream;
-                        currentStream = stream;
-                        usingFront = false;
-                        updateMirror();
-                    } catch (e2) {
-                        alert("Không thể truy cập camera: " + e2.message);
-                    }
-                } else {
-                    alert("Không thể truy cập camera: " + e.message);
-                }
+            } catch (e2) {
+                alert("Không thể truy cập camera: " + e2.message);
             }
+        } else {
+            alert("Không thể truy cập camera: " + e.message);
         }
-
-        function updateMirror() {
-            video.style.transform = usingFront ? `scaleX(-${currentZoom}) scaleY(1)` : `scale(${currentZoom})`;
-            canvas.style.transform = usingFront ? `scaleX(-${currentZoom}) scaleY(1)` : `scale(${currentZoom})`;
+    }
+}
+function updateMirror() {
+    video.style.transform = usingFront ? `scaleX(-${currentZoom}) scaleY(1)` : `scale(${currentZoom})`;
+    canvas.style.transform = usingFront ? `scaleX(-${currentZoom}) scaleY(1)` : `scale(${currentZoom})`;
+}
+startCamera();
+document.getElementById('rotate-btn').onclick = async function() {
+    usingFront = !usingFront;
+    await startCamera(usingFront ? "user" : "environment");
+};
+const sliders = {
+    grayscale: document.getElementById('grayscale'),
+    brightness: document.getElementById('brightness'),
+    sepia: document.getElementById('sepia'),
+    blur: document.getElementById('blur'),
+    hue: document.getElementById('hue'),
+    noise: document.getElementById('noise'),
+};
+function updateFilter() {
+    const gs = sliders.grayscale.value;
+    const br = sliders.brightness.value;
+    const sep = sliders.sepia.value;
+    const blur = sliders.blur.value;
+    const hue = sliders.hue.value * 90;
+    video.style.filter =
+        `grayscale(${gs}) brightness(${br}) sepia(${sep}) blur(${blur}px) hue-rotate(${hue}deg)`;
+}
+Object.values(sliders).forEach(sl => sl.addEventListener('input', updateFilter));
+updateFilter();
+const zoomBtns = Array.from(document.getElementsByClassName("zoom-btn"));
+let currentZoom = 1;
+function setZoom(zoom) {
+    currentZoom = zoom;
+    updateMirror();
+    zoomBtns.forEach(btn => btn.classList.remove("active"));
+    zoomBtns.find(btn => btn.dataset.zoom == zoom).classList.add("active");
+}
+zoomBtns.forEach(btn => {
+    btn.addEventListener('click', () => setZoom(Number(btn.dataset.zoom)));
+});
+const captureBtn = document.getElementById('capture');
+const resetBtn = document.getElementById('reset');
+const capturedList = document.getElementById('captured-list');
+let capturedImages = [];
+function addNoise(ctx, w, h, amount) {
+    if (amount <= 0) return;
+    const imgData = ctx.getImageData(0, 0, w, h);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+        const noise = (Math.random() - 0.5) * amount * 255;
+        d[i] = Math.min(255, Math.max(0, d[i] + noise));
+        d[i+1] = Math.min(255, Math.max(0, d[i+1] + noise));
+        d[i+2] = Math.min(255, Math.max(0, d[i+2] + noise));
+    }
+    ctx.putImageData(imgData, 0, 0);
+}
+function renderCapturedList() {
+    capturedList.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = "captured-img-thumb-wrapper";
+        const label = document.createElement('div');
+        label.className = "captured-img-label";
+        label.textContent = `Ảnh ${i+1}`;
+        wrapper.appendChild(label);
+        if (capturedImages[i]) {
+            const img = document.createElement('img');
+            img.className = 'captured-img-thumb';
+            img.src = capturedImages[i];
+            img.dataset.idx = i;
+            img.addEventListener('click', () => showCapturedFull(i));
+            wrapper.appendChild(img);
+        } else {
+            const placeholder = document.createElement('div');
+            placeholder.style.width = "80%";
+            placeholder.style.height = "0";
+            placeholder.style.paddingBottom = "60%";
+            placeholder.style.background = "#222428";
+            placeholder.style.borderRadius = "5px";
+            placeholder.style.opacity = "0.6";
+            wrapper.appendChild(placeholder);
         }
-
-        startCamera();
-
-        document.getElementById('rotate-btn').onclick = async function() {
-            usingFront = !usingFront;
-            await startCamera(usingFront ? "user" : "environment");
+        capturedList.appendChild(wrapper);
+    }
+    toggleMainActions(capturedImages.filter(x=>x).length >= 4);
+}
+function toggleMainActions(isFull) {
+    document.getElementById('main-actions').classList.toggle('hidden', isFull);
+    document.getElementById('after-actions').classList.toggle('hidden', !isFull);
+}
+function showCapturedFull(idx) {
+    if (capturedImages[idx]) {
+        video.style.display = 'none';
+        canvas.style.display = 'block';
+        const ctx = canvas.getContext('2d');
+        const img = new window.Image();
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            setZoom(currentZoom);
         };
-
-        const sliders = {
-            grayscale: document.getElementById('grayscale'),
-            brightness: document.getElementById('brightness'),
-            sepia: document.getElementById('sepia'),
-            blur: document.getElementById('blur'),
-            hue: document.getElementById('hue'),
-            noise: document.getElementById('noise'),
-        };
-        function updateFilter() {
-            const gs = sliders.grayscale.value;
-            const br = sliders.brightness.value;
-            const sep = sliders.sepia.value;
-            const blur = sliders.blur.value;
-            const hue = sliders.hue.value * 90;
-            video.style.filter =
-                `grayscale(${gs}) brightness(${br}) sepia(${sep}) blur(${blur}px) hue-rotate(${hue}deg)`;
+        img.src = capturedImages[idx];
+        document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
+        const thumb = document.querySelector(`.captured-img-thumb[data-idx="${idx}"]`);
+        if(thumb) thumb.classList.add('selected');
+    }
+}
+function showVideo() {
+    video.style.display = '';
+    canvas.style.display = 'none';
+    document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
+}
+video.addEventListener('click', showVideo);
+canvas.addEventListener('click', showVideo);
+function captureToIndex(idx) {
+    if (idx < 0 || idx > 3) return;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.save();
+    if (usingFront) {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+    }
+    ctx.filter =
+        `grayscale(${sliders.grayscale.value}) brightness(${sliders.brightness.value}) sepia(${sliders.sepia.value}) blur(${sliders.blur.value}px) hue-rotate(${sliders.hue.value * 90}deg)`;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    addNoise(ctx, canvas.width, canvas.height, parseFloat(sliders.noise.value));
+    const dataURL = canvas.toDataURL('image/jpeg');
+    capturedImages[idx] = dataURL;
+    renderCapturedList();
+}
+captureBtn.onclick = function() {
+    const idx = capturedImages.findIndex(x => !x);
+    if (idx === -1 && capturedImages.length >= 4) {
+        alert("Bạn chỉ có thể chụp tối đa 4 ảnh. Hãy xoá để chụp lại.");
+        return;
+    }
+    captureToIndex(idx === -1 ? 3 : idx);
+};
+resetBtn.onclick = function() {
+    capturedImages = [];
+    renderCapturedList();
+    showVideo();
+};
+setZoom(1);
+renderCapturedList();
+const singleBtn = document.getElementById('btn-mode-1');
+const burstBtn = document.getElementById('btn-mode-2');
+const burstCountdown = document.getElementById('burst-countdown');
+singleBtn.onclick = async () => {
+    singleBtn.disabled = true;
+    for (let i = 0; i < 4; i++) {
+        if (capturedImages[i]) continue;
+        for (let t = 3; t > 0; t--) {
+            burstCountdown.innerText = t;
+            burstCountdown.style.display = 'block';
+            await new Promise(res => setTimeout(res, 700));
         }
-        Object.values(sliders).forEach(sl => sl.addEventListener('input', updateFilter));
-        updateFilter();
-
-        const zoomBtns = Array.from(document.getElementsByClassName("zoom-btn"));
-        let currentZoom = 1;
-        function setZoom(zoom) {
-            currentZoom = zoom;
-            updateMirror();
-            zoomBtns.forEach(btn => btn.classList.remove("active"));
-            zoomBtns.find(btn => btn.dataset.zoom == zoom).classList.add("active");
-        }
-        zoomBtns.forEach(btn => {
-            btn.addEventListener('click', () => setZoom(Number(btn.dataset.zoom)));
+        burstCountdown.style.display = 'none';
+        await new Promise(res => {
+            setTimeout(() => {
+                captureToIndex(i);
+                res();
+            }, 250);
         });
-
-        const captureBtn = document.getElementById('capture');
-        const resetBtn = document.getElementById('reset');
-        const capturedList = document.getElementById('captured-list');
-        let capturedImages = [];
-
-        function addNoise(ctx, w, h, amount) {
-            if (amount <= 0) return;
-            const imgData = ctx.getImageData(0, 0, w, h);
-            const d = imgData.data;
-            for (let i = 0; i < d.length; i += 4) {
-                const noise = (Math.random() - 0.5) * amount * 255;
-                d[i] = Math.min(255, Math.max(0, d[i] + noise));
-                d[i+1] = Math.min(255, Math.max(0, d[i+1] + noise));
-                d[i+2] = Math.min(255, Math.max(0, d[i+2] + noise));
-            }
-            ctx.putImageData(imgData, 0, 0);
+    }
+    singleBtn.disabled = false;
+};
+burstBtn.onclick = async () => {
+    burstBtn.disabled = true;
+    let total = 4, interval = 2300;
+    for(let i=0; i<total; i++) {
+        for(let t=3; t>0; t--) {
+            burstCountdown.innerText = t;
+            burstCountdown.style.display = 'block';
+            await new Promise(res => setTimeout(res, 700));
         }
-
-        function renderCapturedList() {
-            capturedList.innerHTML = '';
-            for (let i = 0; i < 4; i++) {
-                const wrapper = document.createElement('div');
-                wrapper.className = "captured-img-thumb-wrapper";
-                const label = document.createElement('div');
-                label.className = "captured-img-label";
-                label.textContent = `Ảnh ${i+1}`;
-                wrapper.appendChild(label);
-                if (capturedImages[i]) {
-                    const img = document.createElement('img');
-                    img.className = 'captured-img-thumb';
-                    img.src = capturedImages[i];
-                    img.dataset.idx = i;
-                    img.addEventListener('click', () => showCapturedFull(i));
-                    wrapper.appendChild(img);
-                } else {
-                    const placeholder = document.createElement('div');
-                    placeholder.style.width = "80%";
-                    placeholder.style.height = "0";
-                    placeholder.style.paddingBottom = "60%";
-                    placeholder.style.background = "#222428";
-                    placeholder.style.borderRadius = "5px";
-                    placeholder.style.opacity = "0.6";
-                    wrapper.appendChild(placeholder);
-                }
-                capturedList.appendChild(wrapper);
-            }
-            toggleMainActions(capturedImages.filter(x=>x).length >= 4);
-        }
-
-        function toggleMainActions(isFull) {
-            document.getElementById('main-actions').classList.toggle('hidden', isFull);
-            document.getElementById('after-actions').classList.toggle('hidden', !isFull);
-        }
-
-        function showCapturedFull(idx) {
-            if (capturedImages[idx]) {
-                video.style.display = 'none';
-                canvas.style.display = 'block';
-                const ctx = canvas.getContext('2d');
-                const img = new window.Image();
-                img.onload = function() {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.clearRect(0,0,canvas.width,canvas.height);
-                    ctx.drawImage(img, 0, 0, img.width, img.height);
-                    setZoom(currentZoom);
-                };
-                img.src = capturedImages[idx];
-                document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
-                const thumb = document.querySelector(`.captured-img-thumb[data-idx="${idx}"]`);
-                if(thumb) thumb.classList.add('selected');
-            }
-        }
-
-        function showVideo() {
-            video.style.display = '';
-            canvas.style.display = 'none';
-            document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
-        }
-
-        video.addEventListener('click', showVideo);
-        canvas.addEventListener('click', showVideo);
-
-        function captureToIndex(idx) {
-            if (idx < 0 || idx > 3) return;
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.save();
-            if (usingFront) {
-                ctx.translate(canvas.width, 0);
-                ctx.scale(-1, 1);
-            }
-            ctx.filter =
-                `grayscale(${sliders.grayscale.value}) brightness(${sliders.brightness.value}) sepia(${sliders.sepia.value}) blur(${sliders.blur.value}px) hue-rotate(${sliders.hue.value * 90}deg)`;
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            ctx.restore();
-            addNoise(ctx, canvas.width, canvas.height, parseFloat(sliders.noise.value));
-            const dataURL = canvas.toDataURL('image/jpeg');
-            capturedImages[idx] = dataURL;
-            renderCapturedList();
-        }
-
-        captureBtn.onclick = function() {
-            const idx = capturedImages.findIndex(x => !x);
-            if (idx === -1 && capturedImages.length >= 4) {
-                alert("Bạn chỉ có thể chụp tối đa 4 ảnh. Hãy xoá để chụp lại.");
-                return;
-            }
-            captureToIndex(idx === -1 ? 3 : idx);
-        };
-
-        resetBtn.onclick = function() {
-            capturedImages = [];
-            renderCapturedList();
-            showVideo();
-        };
-
-        setZoom(1);
-        renderCapturedList();
-
-        // Chụp từng kiểu 1/4 với đếm ngược 3 giây cho từng kiểu
-        const singleBtn = document.getElementById('btn-mode-1');
-        const burstBtn = document.getElementById('btn-mode-2');
-        const burstCountdown = document.getElementById('burst-countdown');
-
-        singleBtn.onclick = async () => {
-            singleBtn.disabled = true;
-            for (let i = 0; i < 4; i++) {
-                if (capturedImages[i]) continue;
-                for (let t = 3; t > 0; t--) {
-                    burstCountdown.innerText = t;
-                    burstCountdown.style.display = 'block';
-                    await new Promise(res => setTimeout(res, 700));
-                }
-                burstCountdown.style.display = 'none';
-                await new Promise(res => {
-                    setTimeout(() => {
-                        captureToIndex(i);
-                        res();
-                    }, 250);
-                });
-            }
-            singleBtn.disabled = false;
-        };
-
-        burstBtn.onclick = async () => {
-            burstBtn.disabled = true;
-            let total = 4, interval = 2300;
-            for(let i=0; i<total; i++) {
-                for(let t=3; t>0; t--) {
-                    burstCountdown.innerText = t;
-                    burstCountdown.style.display = 'block';
-                    await new Promise(res => setTimeout(res, 700));
-                }
-                burstCountdown.style.display = 'none';
-                await new Promise(res => {
-                    setTimeout(() => {
-                        captureBtn.click();
-                        res();
-                    }, 250);
-                });
-                if (i < total - 1) await new Promise(res => setTimeout(res, interval - 1000*3));
-            }
-            burstBtn.disabled = false;
-        };
-
-        // Modal xác nhận "Chụp lại"
-        document.getElementById('retake-btn').onclick = () => {
-            document.getElementById('confirm-modal-backdrop').classList.remove('hidden');
-        };
-        document.getElementById('modal-cancel').onclick = () => {
-            document.getElementById('confirm-modal-backdrop').classList.add('hidden');
-        };
-        document.getElementById('modal-confirm').onclick = () => {
-            document.getElementById('confirm-modal-backdrop').classList.add('hidden');
-            capturedImages = [];
-            renderCapturedList();
-            showVideo();
-        };
-
-        document.querySelectorAll('.heart-btn').forEach(btn => {
-            btn.onclick = () => alert('Đã yêu thích!');
+        burstCountdown.style.display = 'none';
+        await new Promise(res => {
+            setTimeout(() => {
+                captureBtn.click();
+                res();
+            }, 250);
         });
-
-        // Chuyển sang giao diện chọn khung khi bấm "Tiếp tục"
-        document.getElementById('continue-btn').onclick = () => {
-            [
-                '.side-bar',
-                '.right-bar',
-                '.main-view',
-                '.sidebar-actions',
-                '.bottom-bar'
-            ].forEach(sel => {
-                document.querySelectorAll(sel).forEach(e => e.style.display = 'none');
-            });
-            document.getElementById('frame-select-screen').classList.remove('hidden');
-        };
-
-        // Bấm "CHỤP TIẾP ẢNH MỚI" sẽ quay lại giao diện photobooth
-        document.getElementById('btn-new-photo').onclick = () => {
-            [
-                '.side-bar',
-                '.right-bar',
-                '.main-view',
-                '.sidebar-actions',
-                '.bottom-bar'
-            ].forEach(sel => {
-                document.querySelectorAll(sel).forEach(e => e.style.display = '');
-            });
-            document.getElementById('frame-select-screen').classList.add('hidden');
-        };
-
-        // Tabs chọn frame
-        document.querySelectorAll('.frame-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.frame-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                // Lọc frame nếu muốn
-            });
-        });
-
-        // Chọn frame
-        document.querySelectorAll('.frame-item').forEach(frame => {
-            frame.addEventListener('click', () => {
-                document.querySelectorAll('.frame-item').forEach(f => f.classList.remove('selected'));
-                frame.classList.add('selected');
-            });
-        });
-
-        document.getElementById('btn-order-print').onclick = () => {
-            alert('Bạn đã chọn in ảnh giao tận nơi!');
-        };
-        document.getElementById('btn-share').onclick = () => {
-            alert('Link ảnh đã được copy! (Mô phỏng)');
-        };
-    </script>
+        if (i < total - 1) await new Promise(res => setTimeout(res, interval - 1000*3));
+    }
+    burstBtn.disabled = false;
+};
+document.getElementById('retake-btn').onclick = () => {
+    document.getElementById('confirm-modal-backdrop').classList.remove('hidden');
+};
+document.getElementById('modal-cancel').onclick = () => {
+    document.getElementById('confirm-modal-backdrop').classList.add('hidden');
+};
+document.getElementById('modal-confirm').onclick = () => {
+    document.getElementById('confirm-modal-backdrop').classList.add('hidden');
+    capturedImages = [];
+    renderCapturedList();
+    showVideo();
+};
+document.querySelectorAll('.heart-btn').forEach(btn => {
+    btn.onclick = () => alert('Đã yêu thích!');
+});
+// Chuyển sang giao diện chọn khung khi bấm "Tiếp tục"
+document.getElementById('continue-btn').onclick = () => {
+    [
+        '.side-bar',
+        '.right-bar',
+        '.main-view',
+        '.sidebar-actions',
+        '.bottom-bar'
+    ].forEach(sel => {
+        document.querySelectorAll(sel).forEach(e => e.style.display = 'none');
+    });
+    document.getElementById('frame-select-screen').classList.remove('hidden');
+};
+// Bấm "CHỤP TIẾP ẢNH MỚI" sẽ quay lại giao diện photobooth
+document.getElementById('btn-new-photo').onclick = () => {
+    [
+        '.side-bar',
+        '.right-bar',
+        '.main-view',
+        '.sidebar-actions',
+        '.bottom-bar'
+    ].forEach(sel => {
+        document.querySelectorAll(sel).forEach(e => e.style.display = '');
+    });
+    document.getElementById('frame-select-screen').classList.add('hidden');
+};
+// Tabs chọn frame
+document.querySelectorAll('.frame-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.frame-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        // Lọc frame nếu muốn (demo: chưa lọc)
+    });
+});
+// Chọn frame
+document.querySelectorAll('.frame-item').forEach(frame => {
+    frame.addEventListener('click', () => {
+        document.querySelectorAll('.frame-item').forEach(f => f.classList.remove('selected'));
+        frame.classList.add('selected');
+    });
+});
+document.getElementById('btn-order-print').onclick = () => {
+    alert('Bạn đã chọn in ảnh giao tận nơi!');
+};
+document.getElementById('btn-share').onclick = () => {
+    alert('Link ảnh đã được copy! (Mô phỏng)');
+};
+</script>
 </body>
 </html>
