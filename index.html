@@ -210,7 +210,7 @@
             startCamera();
         }
 
-        // Sửa TẠI ĐÂY: lật lại ảnh khi chụp từ video để lưu không bị ngược
+        // Lật lại ảnh khi chụp từ video (đúng chiều) và KHÔNG lật khi xuất ảnh photostrip
         async function captureImages() {
             for (let i = 0; i < 4; i++) {
                 await startCountdown();
@@ -220,7 +220,7 @@
                 canvas.width = vW;
                 canvas.height = vH;
                 const ctx = canvas.getContext('2d');
-                // Lật lại ảnh từ video khi vẽ lên canvas (để lưu về đúng chiều)
+                // Lật lại đúng chiều khi chụp từ video (video đang bị scaleX(-1))
                 ctx.save();
                 ctx.translate(vW, 0);
                 ctx.scale(-1, 1);
@@ -251,6 +251,7 @@
             });
         }
 
+        // KHÔNG lật khi xuất photostrip (giữ đúng chiều đã lật ở captureImages)
         function downloadImages() {
             let imageWidth = imageStrip[0].naturalWidth || CAPTURE_WIDTH;
             let imageHeight = imageStrip[0].naturalHeight || CAPTURE_HEIGHT;
@@ -262,11 +263,8 @@
 
             for (let i = 0; i < 4; i++) {
                 if (imageStrip[i].src) {
-                    context.save();
-                    context.translate(imageWidth, i * imageHeight);
-                    context.scale(-1, 1);
-                    context.drawImage(imageStrip[i], 0, 0, imageWidth, imageHeight);
-                    context.restore();
+                    // Vẽ đúng chiều, KHÔNG lật lại (không translate/scale như trước nữa)
+                    context.drawImage(imageStrip[i], 0, i * imageHeight, imageWidth, imageHeight);
                 }
             }
 
