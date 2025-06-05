@@ -42,6 +42,19 @@
             height: 100%;
             object-fit: contain;
             transform: scaleX(-1);
+            /* Filter will be set dynamically */
+        }
+        .filter-controls {
+            margin: 16px 0 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+        .filter-controls label {
+            font-weight: bold;
+            color: #ffb3c2;
+            margin-right: 4px;
         }
         .image-strip {
             display: flex;
@@ -135,6 +148,21 @@
             <a id="ios-download-link" href="#" target="_blank" rel="noopener noreferrer">TẢI XUỐNG</a>
         </div>
         <h1 style="color: #ffceda;">PHOTO BOOTH</h1>
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <label for="filter">Filter:</label>
+            <select id="filter">
+                <option value="none">None</option>
+                <option value="grayscale(1)">Grayscale</option>
+                <option value="sepia(1)">Sepia</option>
+                <option value="invert(1)">Invert</option>
+                <option value="contrast(2)">High Contrast</option>
+                <option value="brightness(1.5)">Bright</option>
+                <option value="blur(2px)">Blur</option>
+                <option value="hue-rotate(90deg)">Hue Rotate</option>
+                <option value="saturate(3)">Saturate</option>
+            </select>
+        </div>
         <div class="layout">
             <div class="video-container">
                 <video id="video" autoplay playsinline></video>
@@ -165,6 +193,19 @@
         const imageStrip = document.getElementById('image-strip').getElementsByTagName('img');
         const iosBanner = document.getElementById('ios-download-banner');
         const iosDownloadLink = document.getElementById('ios-download-link');
+        const filterSelect = document.getElementById('filter');
+
+        // Default filter value
+        let currentFilter = "none";
+
+        // Update filter on video when changed
+        filterSelect.addEventListener("change", function() {
+            currentFilter = this.value;
+            video.style.filter = currentFilter;
+        });
+
+        // Set initial filter
+        video.style.filter = currentFilter;
 
         // Giá trị mặc định lớn hơn cho canvas chụp
         const CAPTURE_WIDTH = 800;
@@ -210,7 +251,7 @@
             startCamera();
         }
 
-        // Lật lại ảnh khi chụp từ video (đúng chiều) và KHÔNG lật khi xuất ảnh photostrip
+        // Lật lại ảnh khi chụp từ video (đúng chiều) và ÁP DỤNG FILTER
         async function captureImages() {
             for (let i = 0; i < 4; i++) {
                 await startCountdown();
@@ -224,6 +265,8 @@
                 ctx.save();
                 ctx.translate(vW, 0);
                 ctx.scale(-1, 1);
+                // Áp dụng filter đang chọn lên context trước khi vẽ
+                ctx.filter = currentFilter;
                 ctx.drawImage(video, 0, 0, vW, vH);
                 ctx.restore();
                 imageStrip[i].src = canvas.toDataURL('image/png');
