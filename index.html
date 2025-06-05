@@ -212,6 +212,21 @@
             box-shadow: 0 0 0 3px #2697ff;
         }
 
+        .burst-countdown {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 120px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 20px #000, 0px 0px 30px #2697ff;
+            z-index: 20;
+            pointer-events: none;
+            user-select: none;
+        }
+
         /* NEW: Bottom gradient bar and buttons */
         .bottom-bar {
             position: fixed;
@@ -372,6 +387,7 @@
         <div class="video-wrap">
             <video id="video" autoplay playsinline></video>
             <canvas id="capture-canvas" style="display:none;"></canvas>
+            <div id="burst-countdown" class="burst-countdown"></div>
         </div>
         <div class="zoom-panel" style="position:absolute;bottom:105px;left:50%;transform:translateX(-50%);">
             <button class="zoom-btn active" data-zoom="1">1x</button>
@@ -459,6 +475,8 @@
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
                 currentStream = stream;
+                // Đảm bảo cam trước thì lật gương, cam sau thì không lật
+                updateMirror();
             } catch (e) {
                 // fallback to environment if user is not available
                 if (facingMode === "user") {
@@ -470,6 +488,7 @@
                         video.srcObject = stream;
                         currentStream = stream;
                         usingFront = false;
+                        updateMirror();
                     } catch (e2) {
                         alert("Không thể truy cập camera: " + e2.message);
                     }
@@ -478,6 +497,13 @@
                 }
             }
         }
+
+        function updateMirror() {
+            // Cam trước lật gương, cam sau không lật
+            video.style.transform = usingFront ? `scaleX(-${currentZoom}) scaleY(1)` : `scale(${currentZoom})`;
+            canvas.style.transform = usingFront ? `scaleX(-${currentZoom}) scaleY(1)` : `scale(${currentZoom})`;
+        }
+
         // Init camera
         startCamera();
 
@@ -513,8 +539,7 @@
         let currentZoom = 1;
         function setZoom(zoom) {
             currentZoom = zoom;
-            video.style.transform = `scale(${zoom})`;
-            canvas.style.transform = `scale(${zoom})`;
+            updateMirror();
             zoomBtns.forEach(btn => btn.classList.remove("active"));
             zoomBtns.find(btn => btn.dataset.zoom == zoom).classList.add("active");
         }
@@ -573,7 +598,6 @@
         }
 
         function showCapturedFull(idx) {
-            // Show the captured photo in the video area, hide video, show canvas
             if (capturedImages[idx]) {
                 video.style.display = 'none';
                 canvas.style.display = 'block';
@@ -584,10 +608,9 @@
                     canvas.height = img.height;
                     ctx.clearRect(0,0,canvas.width,canvas.height);
                     ctx.drawImage(img, 0, 0, img.width, img.height);
-                    setZoom(currentZoom); // apply zoom to canvas
+                    setZoom(currentZoom);
                 };
                 img.src = capturedImages[idx];
-                // Highlight the selected thumb
                 document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
                 const thumb = document.querySelector(`.captured-img-thumb[data-idx="${idx}"]`);
                 if(thumb) thumb.classList.add('selected');
@@ -610,18 +633,22 @@
                 alert("Bạn chỉ có thể chụp tối đa 4 ảnh. Hãy xoá để chụp lại.");
                 return;
             }
+            // Lật ảnh đúng chiều khi là cam trước
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
-            // Draw with current filter values
+            ctx.save();
+            if (usingFront) {
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1,1);
+            }
             ctx.filter =
                 `grayscale(${sliders.grayscale.value}) brightness(${sliders.brightness.value}) sepia(${sliders.sepia.value}) blur(${sliders.blur.value}px) hue-rotate(${sliders.hue.value * 90}deg)`;
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            // Add noise if needed
+            ctx.restore();
             addNoise(ctx, canvas.width, canvas.height, parseFloat(sliders.noise.value));
             const dataURL = canvas.toDataURL('image/jpeg');
             if (idx === -1) {
-                // Replace last
                 capturedImages[3] = dataURL;
             } else {
                 capturedImages[idx] = dataURL;
@@ -639,9 +666,35 @@
         setZoom(1);
         renderCapturedList();
 
-        // Bottom bar buttons (dummy for UI match)
+        // Bottom bar buttons
         document.getElementById('btn-mode-1').onclick = () => alert('Chức năng chụp từng kiểu 1/4!');
-        document.getElementById('btn-mode-2').onclick = () => alert('Chức năng chụp liên tiếp!');
+
+        // Burst capture logic
+        const burstBtn = document.getElementById('btn-mode-2');
+        const burstCountdown = document.getElementById('burst-countdown');
+        burstBtn.onclick = async () => {
+            burstBtn.disabled = true;
+            let total = 4, interval = 2500;
+            for(let i=0; i<total; i++) {
+                // Countdown 3-2-1
+                for(let t=3; t>0; t--) {
+                    burstCountdown.innerText = t;
+                    burstCountdown.style.display = 'block';
+                    await new Promise(res => setTimeout(res, 700));
+                }
+                burstCountdown.style.display = 'none';
+                // Chụp ảnh
+                await new Promise(res => {
+                    setTimeout(() => {
+                        captureBtn.click();
+                        res();
+                    }, 300);
+                });
+                if (i < total - 1) await new Promise(res => setTimeout(res, interval - 1000*3));
+            }
+            burstBtn.disabled = false;
+        };
+
         document.querySelector('.heart-btn').onclick = () => alert('Đã yêu thích!');
     </script>
 </body>
