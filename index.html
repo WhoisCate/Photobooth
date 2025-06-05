@@ -321,7 +321,75 @@
             color: #f660a2;
             border-color: #f660a2;
         }
-        /* Action bar for after 4 photos */
+        /* Modal confirm style */
+        .modal-backdrop {
+            position: fixed;
+            left: 0; top: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.30);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-modal {
+            background: #fff;
+            border-radius: 14px;
+            max-width: 420px;
+            box-shadow: 0 2px 16px #0003;
+            padding: 32px 30px 24px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: modalshow .2s;
+        }
+        @keyframes modalshow {
+            0% {transform: scale(0.96) translateY(36px); opacity: 0;}
+            100% {transform: scale(1) translateY(0); opacity: 1;}
+        }
+        .confirm-modal h3 {
+            margin: 0 0 12px 0;
+            font-size: 21px;
+            font-weight: 700;
+            color: #232b38;
+            text-align: center;
+        }
+        .confirm-modal p {
+            margin: 0 0 24px 0;
+            font-size: 16px;
+            color: #444;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .confirm-modal .modal-actions {
+            display: flex;
+            gap: 18px;
+            width: 100%;
+            justify-content: center;
+        }
+        .modal-btn {
+            font-size: 15px;
+            border: none;
+            border-radius: 18px;
+            padding: 9px 22px;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s;
+            font-weight: 600;
+        }
+        .modal-btn.cancel {
+            background: #f4f4f4;
+            color: #232b38;
+        }
+        .modal-btn.cancel:hover {
+            background: #e1e1e1;
+        }
+        .modal-btn.confirm {
+            background: #e54c4c;
+            color: #fff;
+        }
+        .modal-btn.confirm:hover {
+            background: #c93030;
+        }
+        /* End modal confirm style */
         .hidden { display: none !important; }
         .action-btn {
             min-width: 120px;
@@ -521,7 +589,20 @@
             </svg>
         </button>
     </div>
+    <!-- Modal xác nhận xóa -->
+    <div id="confirm-modal-backdrop" class="modal-backdrop hidden">
+      <div class="confirm-modal">
+        <h3>Chụp lại tất cả ảnh đã chụp?</h3>
+        <p>Ảnh đã chụp chưa được lưu, ấn chụp lại sẽ xóa tất cả ảnh hiện tại của bạn và bắt đầu phiên chụp mới.<br>
+        Bạn có chắc chắn muốn xoá hết?</p>
+        <div class="modal-actions">
+          <button class="modal-btn cancel" id="modal-cancel">Xem lại ảnh</button>
+          <button class="modal-btn confirm" id="modal-confirm">Xoá hết và chụp lại</button>
+        </div>
+      </div>
+    </div>
     <script>
+        // ... giữ nguyên logic phía trên của bạn ...
         document.getElementById('back-btn').onclick = function() {
             window.history.back();
         };
@@ -533,7 +614,6 @@
                 document.exitFullscreen();
             }
         };
-
         const video = document.getElementById('video');
         const canvas = document.getElementById('capture-canvas');
         let currentStream = null;
@@ -662,7 +742,6 @@
                 }
                 capturedList.appendChild(wrapper);
             }
-            // Khi đủ 4 ảnh, show các nút hành động tiếp theo
             toggleMainActions(capturedImages.filter(x=>x).length >= 4);
         }
 
@@ -784,19 +863,24 @@
             burstBtn.disabled = false;
         };
 
-        // Nút "Chụp lại"
+        // Modal xác nhận "Chụp lại"
         document.getElementById('retake-btn').onclick = () => {
+            document.getElementById('confirm-modal-backdrop').classList.remove('hidden');
+        };
+        document.getElementById('modal-cancel').onclick = () => {
+            document.getElementById('confirm-modal-backdrop').classList.add('hidden');
+        };
+        document.getElementById('modal-confirm').onclick = () => {
+            document.getElementById('confirm-modal-backdrop').classList.add('hidden');
             capturedImages = [];
             renderCapturedList();
             showVideo();
         };
 
-        // Nút "Tiếp tục"
         document.getElementById('continue-btn').onclick = () => {
             alert('Tiếp tục!');
         };
 
-        // Like button
         document.querySelectorAll('.heart-btn').forEach(btn => {
             btn.onclick = () => alert('Đã yêu thích!');
         });
