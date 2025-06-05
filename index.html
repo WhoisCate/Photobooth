@@ -118,6 +118,30 @@
             padding: 5px 13px;
             position: relative;
         }
+        .zoom-panel .icon-btn {
+            background: #222834;
+            border: none;
+            color: white;
+            font-size: 19px;
+            padding: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .zoom-panel .icon-btn:hover {
+            background: #2697ff;
+            color: #fff;
+        }
+        .zoom-panel .icon-btn svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
         .zoom-btn {
             background: none;
             color: #fff;
@@ -395,17 +419,18 @@
             <div id="burst-countdown" class="burst-countdown"></div>
         </div>
         <div class="zoom-panel" style="position:absolute;bottom:70px;left:50%;transform:translateX(-50%);">
+            <!-- Nút Xoay camera bên trái nút 1x -->
+            <button class="icon-btn" id="rotate-btn" title="Xoay camera" style="margin-right:10px;">
+                <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+                    <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
+                </svg>
+            </button>
             <button class="zoom-btn active" data-zoom="1">1x</button>
             <button class="zoom-btn" data-zoom="2">2x</button>
             <button class="zoom-btn" data-zoom="5">5x</button>
             <button class="zoom-btn" data-zoom="99">99x</button>
         </div>
         <div class="controls-panel" style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);">
-            <button class="icon-btn" id="rotate-btn" title="Xoay camera">
-                <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
-                </svg>
-            </button>
             <button class="icon-btn" id="capture" title="Chụp ảnh">
                 <svg viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
@@ -504,6 +529,7 @@
 
         startCamera();
 
+        // Sự kiện cho nút xoay camera
         document.getElementById('rotate-btn').onclick = async function() {
             usingFront = !usingFront;
             await startCamera(usingFront ? "user" : "environment");
