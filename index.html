@@ -71,17 +71,27 @@
             justify-content: center;
             margin-top: 18px;
         }
-        .controls-panel button {
-            background-color: #1b81e3;
+        .controls-panel button, .controls-panel .icon-btn {
+            background-color: #232b38;
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 22px;
             padding: 8px 18px;
-            border-radius: 24px;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
         }
-        .controls-panel button:hover {
-            background: #38b6ff;
+        .controls-panel button:hover, .controls-panel .icon-btn:hover {
+            background: #448aff;
+            color: #fff;
+        }
+        .icon-btn svg {
+            width: 28px;
+            height: 28px;
+            display: block;
         }
         .zoom-panel {
             display: flex;
@@ -89,11 +99,14 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 18px;
+            background: rgba(35, 43, 56, 0.8);
+            border-radius: 22px;
+            padding: 6px 16px;
         }
         .zoom-btn {
-            background: #232b38;
+            background: none;
             color: #fff;
-            border: 1.5px solid #448aff;
+            border: none;
             border-radius: 14px;
             padding: 6px 16px;
             font-size: 15px;
@@ -103,7 +116,6 @@
         .zoom-btn.active, .zoom-btn:hover {
             background: #448aff;
             color: #fff;
-            border: 1.5px solid #fff;
         }
         .right-bar {
             width: 180px;
@@ -227,8 +239,22 @@
             <button class="zoom-btn" data-zoom="99">99x</button>
         </div>
         <div class="controls-panel" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);">
-            <button id="capture">Chụp</button>
-            <button id="reset">Xoá tất cả</button>
+            <button class="icon-btn" id="rotate-btn" title="Xoay camera">
+                <!-- Rotate SVG icon -->
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M12 5V2L7 6.5L12 11V8C15.31 8 18 10.69 18 14C18 17.31 15.31 20 12 20C8.69 20 6 17.31 6 14H4C4 18.42 7.58 22 12 22C16.42 22 20 18.42 20 14C20 9.58 16.42 6 12 6V5Z" fill="currentColor"/>
+                </svg>
+            </button>
+            <button id="capture" title="Chụp ảnh">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
+                </svg>
+            </button>
+            <button id="reset" title="Xoá tất cả">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V7H6V19ZM19 4H15.5L14.793 3.293C14.4024 2.90237 13.7682 2.90237 13.3776 3.293L12.5 4.172 11.6224 3.293C11.2318 2.90237 10.5976 2.90237 10.207 3.293L9.5 4H6C4.89543 4 4 4.89543 4 6V7H20V6C20 4.89543 19.1046 4 18 4Z" fill="currentColor"/>
+                </svg>
+            </button>
         </div>
     </div>
     <div class="right-bar">
@@ -239,8 +265,48 @@
         // Camera
         const video = document.getElementById('video');
         const canvas = document.getElementById('capture-canvas');
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
-            .then(stream => video.srcObject = stream);
+        let currentStream = null;
+        let usingFront = true;
+
+        async function startCamera(facingMode = "user") {
+            const constraints = {
+                video: { facingMode: { exact: facingMode } },
+                audio: false
+            };
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                currentStream = stream;
+            } catch (e) {
+                // fallback to environment if user is not available
+                if (facingMode === "user") {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: { exact: "environment" } },
+                            audio: false
+                        });
+                        video.srcObject = stream;
+                        currentStream = stream;
+                        usingFront = false;
+                    } catch (e2) {
+                        alert("Không thể truy cập camera: " + e2.message);
+                    }
+                } else {
+                    alert("Không thể truy cập camera: " + e.message);
+                }
+            }
+        }
+        // Init camera
+        startCamera();
+
+        // Rotate camera
+        document.getElementById('rotate-btn').onclick = async function() {
+            usingFront = !usingFront;
+            await startCamera(usingFront ? "user" : "environment");
+        };
 
         // Effect controls
         const sliders = {
@@ -281,7 +347,6 @@
         const captureBtn = document.getElementById('capture');
         const resetBtn = document.getElementById('reset');
         const capturedList = document.getElementById('captured-list');
-        let photoCount = 0;
         let capturedImages = [];
 
         function addNoise(ctx, w, h, amount) {
