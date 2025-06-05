@@ -56,13 +56,14 @@
             border-radius: 10px;
             overflow: hidden;
         }
-        video, canvas {
+        #video, #capture-canvas {
             width: 520px;
             height: 390px;
             background: #000;
             object-fit: cover;
             border-radius: 10px;
             display: block;
+            transition: transform 0.2s;
         }
         .controls-panel {
             display: flex;
@@ -81,6 +82,28 @@
         }
         .controls-panel button:hover {
             background: #38b6ff;
+        }
+        .zoom-panel {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .zoom-btn {
+            background: #232b38;
+            color: #fff;
+            border: 1.5px solid #448aff;
+            border-radius: 14px;
+            padding: 6px 16px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.2s, border 0.2s;
+        }
+        .zoom-btn.active, .zoom-btn:hover {
+            background: #448aff;
+            color: #fff;
+            border: 1.5px solid #fff;
         }
         .right-bar {
             width: 180px;
@@ -105,6 +128,20 @@
             gap: 15px;
             width: 100%;
         }
+        .captured-img-thumb-wrapper {
+            background: #21242b;
+            border-radius: 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0 8px 0;
+            gap: 5px;
+        }
+        .captured-img-label {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
         .captured-img-thumb {
             width: 100%;
             max-width: 140px;
@@ -113,9 +150,14 @@
             border-radius: 7px;
             border: 1.5px solid #1b81e3;
             object-fit: contain;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .captured-img-thumb.selected {
+            box-shadow: 0 0 0 3px #448aff;
         }
         @media (max-width: 900px) {
-            .main-view video, .main-view canvas {
+            .main-view #video, .main-view #capture-canvas {
                 width: 90vw;
                 height: 38vw;
                 max-width: 95vw;
@@ -176,7 +218,13 @@
     <div class="main-view">
         <div class="video-wrap">
             <video id="video" autoplay playsinline></video>
-            <canvas id="canvas" style="display:none;"></canvas>
+            <canvas id="capture-canvas" style="display:none;"></canvas>
+        </div>
+        <div class="zoom-panel" style="position:absolute;bottom:72px;left:50%;transform:translateX(-50%);">
+            <button class="zoom-btn active" data-zoom="1">1x</button>
+            <button class="zoom-btn" data-zoom="2">2x</button>
+            <button class="zoom-btn" data-zoom="5">5x</button>
+            <button class="zoom-btn" data-zoom="99">99x</button>
         </div>
         <div class="controls-panel" style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);">
             <button id="capture">Chụp</button>
@@ -190,7 +238,7 @@
     <script>
         // Camera
         const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
+        const canvas = document.getElementById('capture-canvas');
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false })
             .then(stream => video.srcObject = stream);
 
@@ -215,10 +263,26 @@
         Object.values(sliders).forEach(sl => sl.addEventListener('input', updateFilter));
         updateFilter();
 
+        // Zoom logic
+        const zoomBtns = Array.from(document.getElementsByClassName("zoom-btn"));
+        let currentZoom = 1;
+        function setZoom(zoom) {
+            currentZoom = zoom;
+            video.style.transform = `scale(${zoom})`;
+            canvas.style.transform = `scale(${zoom})`;
+            zoomBtns.forEach(btn => btn.classList.remove("active"));
+            zoomBtns.find(btn => btn.dataset.zoom == zoom).classList.add("active");
+        }
+        zoomBtns.forEach(btn => {
+            btn.addEventListener('click', () => setZoom(Number(btn.dataset.zoom)));
+        });
+
         // Capture logic
         const captureBtn = document.getElementById('capture');
         const resetBtn = document.getElementById('reset');
         const capturedList = document.getElementById('captured-list');
+        let photoCount = 0;
+        let capturedImages = [];
 
         function addNoise(ctx, w, h, amount) {
             if (amount <= 0) return;
@@ -233,7 +297,75 @@
             ctx.putImageData(imgData, 0, 0);
         }
 
+        function renderCapturedList() {
+            capturedList.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = "captured-img-thumb-wrapper";
+                const label = document.createElement('div');
+                label.className = "captured-img-label";
+                label.textContent = `Ảnh ${i+1}`;
+                wrapper.appendChild(label);
+                if (capturedImages[i]) {
+                    const img = document.createElement('img');
+                    img.className = 'captured-img-thumb';
+                    img.src = capturedImages[i];
+                    img.dataset.idx = i;
+                    img.addEventListener('click', () => showCapturedFull(i));
+                    wrapper.appendChild(img);
+                } else {
+                    // Placeholder box
+                    const placeholder = document.createElement('div');
+                    placeholder.style.width = "100%";
+                    placeholder.style.height = "0";
+                    placeholder.style.paddingBottom = "75%";
+                    placeholder.style.background = "#222428";
+                    placeholder.style.borderRadius = "6px";
+                    placeholder.style.opacity = "0.6";
+                    wrapper.appendChild(placeholder);
+                }
+                capturedList.appendChild(wrapper);
+            }
+        }
+
+        function showCapturedFull(idx) {
+            // Show the captured photo in the video area, hide video, show canvas
+            if (capturedImages[idx]) {
+                video.style.display = 'none';
+                canvas.style.display = 'block';
+                const ctx = canvas.getContext('2d');
+                const img = new window.Image();
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    setZoom(currentZoom); // apply zoom to canvas
+                };
+                img.src = capturedImages[idx];
+                // Highlight the selected thumb
+                document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
+                const thumb = document.querySelector(`.captured-img-thumb[data-idx="${idx}"]`);
+                if(thumb) thumb.classList.add('selected');
+            }
+        }
+
+        function showVideo() {
+            video.style.display = '';
+            canvas.style.display = 'none';
+            document.querySelectorAll('.captured-img-thumb').forEach(e=>e.classList.remove('selected'));
+        }
+
+        video.addEventListener('click', showVideo);
+        canvas.addEventListener('click', showVideo);
+
         captureBtn.onclick = function() {
+            // Find first empty slot
+            const idx = capturedImages.findIndex(x => !x);
+            if (idx === -1 && capturedImages.length >= 4) {
+                alert("Bạn chỉ có thể chụp tối đa 4 ảnh. Hãy xoá để chụp lại.");
+                return;
+            }
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
@@ -243,14 +375,25 @@
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             // Add noise if needed
             addNoise(ctx, canvas.width, canvas.height, parseFloat(sliders.noise.value));
-            const img = document.createElement('img');
-            img.className = 'captured-img-thumb';
-            img.src = canvas.toDataURL('image/jpeg');
-            capturedList.appendChild(img);
+            const dataURL = canvas.toDataURL('image/jpeg');
+            if (idx === -1) {
+                // Replace last
+                capturedImages[3] = dataURL;
+            } else {
+                capturedImages[idx] = dataURL;
+            }
+            renderCapturedList();
         };
+
         resetBtn.onclick = function() {
-            capturedList.innerHTML = '';
+            capturedImages = [];
+            renderCapturedList();
+            showVideo();
         };
+
+        // Default state
+        setZoom(1);
+        renderCapturedList();
     </script>
 </body>
 </html>
