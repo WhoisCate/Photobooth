@@ -404,57 +404,54 @@
             startCamera();
         }
 
-        async function captureImages() {
-            for (let i = 0; i < 4; i++) {
-                await startCountdown();
-                const canvas = document.createElement('canvas');
-                const vW = video.videoWidth || CAPTURE_WIDTH;
-                const vH = video.videoHeight || CAPTURE_HEIGHT;
-                canvas.width = vW;
-                canvas.height = vH;
-                const ctx = canvas.getContext('2d');
-                ctx.save();
-                ctx.translate(vW, 0);
-                ctx.scale(-1, 1);
-                ctx.filter = getFilterString();
-                ctx.drawImage(video, 0, 0, vW, vH);
-                ctx.restore();
+async function captureImages() {
+    for (let i = 0; i < 4; i++) {
+        await startCountdown();
+        const canvas = document.createElement('canvas');
+        const vW = video.videoWidth || CAPTURE_WIDTH;
+        const vH = video.videoHeight || CAPTURE_HEIGHT;
+        canvas.width = vW;
+        canvas.height = vH;
+        const ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.filter = getFilterString();
+        ctx.drawImage(video, 0, 0, vW, vH);
+        ctx.restore();
 
-                // Sun Flare effect
-                if (parseFloat(sunflare.value) > 0) {
-                    ctx.globalAlpha = sunflare.value;
-                    let gradient = ctx.createRadialGradient(
-                        vW * 0.8, vH * 0.2, 10,
-                        vW * 0.8, vH * 0.2, vW * 0.5
-                    );
-                    gradient.addColorStop(0, 'rgba(255,255,200,0.7)');
-                    gradient.addColorStop(1, 'rgba(255,255,200,0)');
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.arc(vW * 0.8, vH * 0.2, vW * 0.5, 0, 2 * Math.PI);
-                    ctx.fill();
-                    ctx.globalAlpha = 1;
-                }
-
-                // Noise effect
-                if (parseFloat(noise.value) > 0) {
-                    let imgData = ctx.getImageData(0, 0, vW, vH);
-                    let data = imgData.data;
-                    for (let j = 0; j < data.length; j += 4) {
-                        let rand = (Math.random() - 0.5) * 255 * noise.value * 0.2;
-                        data[j] = Math.min(255, Math.max(0, data[j] + rand));
-                        data[j+1] = Math.min(255, Math.max(0, data[j+1] + rand));
-                        data[j+2] = Math.min(255, Math.max(0, data[j+2] + rand));
-                    }
-                    ctx.putImageData(imgData, 0, 0);
-                }
-
-                imageStrip[i].src = canvas.toDataURL('image/png');
-                imageStrip[i].width = 90;
-                imageStrip[i].height = 60;
-            }
+        // Sun Flare effect
+        if (parseFloat(sunflare.value) > 0) {
+            ctx.globalAlpha = sunflare.value;
+            let gradient = ctx.createRadialGradient(
+                vW * 0.8, vH * 0.2, 10,
+                vW * 0.8, vH * 0.2, vW * 0.5
+            );
+            gradient.addColorStop(0, 'rgba(255,255,200,0.7)');
+            gradient.addColorStop(1, 'rgba(255,255,200,0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(vW * 0.8, vH * 0.2, vW * 0.5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.globalAlpha = 1;
         }
 
+        // Noise effect
+        if (parseFloat(noise.value) > 0) {
+            let imgData = ctx.getImageData(0, 0, vW, vH);
+            let data = imgData.data;
+            for (let j = 0; j < data.length; j += 4) {
+                let rand = (Math.random() - 0.5) * 255 * noise.value * 0.2;
+                data[j] = Math.min(255, Math.max(0, data[j] + rand));
+                data[j+1] = Math.min(255, Math.max(0, data[j+1] + rand));
+                data[j+2] = Math.min(255, Math.max(0, data[j+2] + rand));
+            }
+            ctx.putImageData(imgData, 0, 0);
+        }
+
+        imageStrip[i].src = canvas.toDataURL('image/png');
+        imageStrip[i].width = 90;
+        imageStrip[i].height = 60;
+    }
+}
         function startCountdown() {
             return new Promise(resolve => {
                 countdown.style.display = 'block';
